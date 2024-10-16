@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MESI-APP", "MESI-APP\MESI-APP.csproj", "{31F8B14E-FD99-49E8-AF90-9C04BF2CA35A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31F8B14E-FD99-49E8-AF90-9C04BF2CA35A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F8B14E-FD99-49E8-AF90-9C04BF2CA35A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F8B14E-FD99-49E8-AF90-9C04BF2CA35A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F8B14E-FD99-49E8-AF90-9C04BF2CA35A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4BEF1539-95BC-4BF3-B010-F2E265282910}
+	EndGlobalSection
+EndGlobal
