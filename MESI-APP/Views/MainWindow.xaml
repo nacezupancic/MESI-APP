@@ -5,8 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Canvas>
-        <Button Margin="20,20" Command="{Binding SaveSettingsCommand}" Content="Save settings" />
-        <TextBox Text="{Binding ServerOutboundUrl}" Margin="50" Width="100" FontSize="15" Background="LightBlue" />
-    </Canvas>
+    <Grid Background="LightGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Background="LightGray" Orientation="Vertical" Grid.Column="0">
+            <Button Margin="10" FontSize="15" Command="{Binding SaveSettingsCommand}" Content="Save settings" />
+        </StackPanel>
+        <Canvas Name="MesiCanvas" Grid.Column="1" Background="White" Margin="10">
+            <WrapPanel Background="LightGreen" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+                <TextBox Margin="10" Text="{Binding ServerOutboundUrl}" Width="100" FontSize="15" Background="LightBlue" />
+            </WrapPanel>
+        </Canvas>
+    </Grid>
 </Window>

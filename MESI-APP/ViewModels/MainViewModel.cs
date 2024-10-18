@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace MESI_APP.ViewModels
 {
     public class MainViewModel : ViewModelBase
-    {        
+    {
         public ICommand SaveSettingsCommand{ get; set; }
         private string _serverOutboundUrl;
         public string ServerOutboundUrl
