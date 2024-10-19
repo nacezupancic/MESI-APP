@@ -37,7 +37,8 @@ namespace MESI_APP
         {
             services.AddSingleton<MainWindow>();
             services.AddSingleton<MainViewModel>();
-            services.AddSingleton<Server>();
+            services.AddSingleton<ServerService>();
+            services.AddSingleton<ClientService>();
         }
     }
 

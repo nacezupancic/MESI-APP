@@ -12,42 +12,77 @@ namespace MESI_APP.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private Server _httpServer;
+        private ServerService _httpServer;
+        private ClientService _clientService;
 
-
+        #region Binding properties
         public ICommand SaveSettingsCommand { get; set; }
         public ICommand StartServerCommand { get; set; }
         public ICommand StopServerCommand { get; set; }
-        private string _serverOutboundUrl;
-        public string ServerOutboundUrl
+        public ICommand SendRequestCommand { get; set; }
+        private string _serverInboundUrl;
+        public string ServerInboundUrl
         {
-            get => _serverOutboundUrl;
+            get => _serverInboundUrl;
             set
             {
-                _serverOutboundUrl = value;
+                _serverInboundUrl = value;
                 OnPropertyChanged();
             }
         }
-        private int _serverOutboundPort;
-        public int ServerOutboundPort
+        private int _serverInboundPort;
+        public int ServerInboundPort
         {
-            get => _serverOutboundPort;
+            get => _serverInboundPort;
             set
             {
                 if (value > 0 && value < 65537) {
-                    _serverOutboundPort = value;
+                    _serverInboundPort = value;
                     OnPropertyChanged();
                 }
             }
         }
-        private string _httpResponseMsg;
-        public string HttpResponseMsg
+        private string _clientOutboundUrl;
+        public string ClientOutboundUrl
         {
-            get => _httpResponseMsg;
+            get => _clientOutboundUrl;
             set
             {
-                _httpResponseMsg = value;
+                _clientOutboundUrl = value;
                 OnPropertyChanged();
+            }
+        }
+        private int _clientOutboundPort;
+        public int ClientOutboundPort
+        {
+            get => _clientOutboundPort;
+            set
+            {
+                if (value > 0 && value < 65537)
+                {
+                    _clientOutboundPort = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private string _messageBody;
+        public string MessageBody
+        {
+            get => _messageBody;
+            set
+            {
+                _messageBody = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _autoSave;
+        public bool AutoSave
+        {
+            get => _autoSave;
+            set
+            {
+                _autoSave = value;
+                 OnPropertyChanged();
             }
         }
         private ObservableCollection<ReceivedRequestDTO> _receivedRequests;
@@ -60,25 +95,32 @@ namespace MESI_APP.ViewModels
                 OnPropertyChanged();
             }
         }
-        public MainViewModel(Server server)
+        #endregion
+        public MainViewModel(ServerService server, ClientService clientService)
         {
             _httpServer = server;
             _httpServer.RequestReceived += OnRequestReceived;
+            _clientService = clientService;
 
-            ServerOutboundUrl = "http://localhost";
+            ServerInboundUrl = "http://localhost";
             SaveSettingsCommand = new RelayCommand(async execute => await SaveSettings());
             StartServerCommand = new RelayCommand(async execute => await StartServer());
             StopServerCommand = new RelayCommand(execute => StopServer());
+            SendRequestCommand = new RelayCommand(async execute => await SendRequest());
             ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
         }
 
+        public async Task SendRequest() {
+            await _clientService.SendPostRequest($"{ClientOutboundUrl}:{ClientOutboundPort}/", MessageBody);
+        }
+
         private async Task SaveSettings() {
-            ServerOutboundUrl += "Yay";
+            ServerInboundUrl += "Yay";
         }
 
         private async Task StartServer()
         {
-            _httpServer.ConfigServer(ServerOutboundUrl, ServerOutboundPort);
+            _httpServer.ConfigServer(ServerInboundUrl, ServerInboundPort);
             await _httpServer.Start();
         }
         private void StopServer()
@@ -88,14 +130,13 @@ namespace MESI_APP.ViewModels
 
         private void OnRequestReceived(ReceivedRequestDTO dto)
         {
+            // UI can be only updated from main thread
             if (Application.Current.Dispatcher.CheckAccess())
             {
-                // We are on the UI thread, safe to update the collection
-                ReceivedRequests.Add(dto);
+                ReceivedRequests.Insert(0,dto);
             }
             else
             {
-                // We're on a background thread, invoke on the UI thread
                 Application.Current.Dispatcher.Invoke(() => OnRequestReceived(dto));
             }
         }

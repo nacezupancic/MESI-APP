@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="700" Width="1100">
     <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -14,22 +14,34 @@
             <Button Margin="10" FontSize="15" Command="{Binding SaveSettingsCommand}" Content="Save settings" />
             <Button Margin="10" FontSize="15" Command="{Binding StartServerCommand}" Content="Start server" />
             <Button Margin="10" FontSize="15" Command="{Binding StopServerCommand}" Content="Stop Server" />
+            <CheckBox HorizontalAlignment="Center" IsChecked="{Binding AutoSave}" FontSize="15" Content="Autosave" />
+            <Button Margin="10" FontSize="15" Command="{Binding SendRequestCommand}" Content="Send request" />
         </StackPanel>
+        
         <Canvas Name="MesiCanvas" Grid.Column="1" Background="White" Margin="10">
             <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
                 <Label FontSize="15" Content="Server address:" />
-                <TextBox Text="{Binding ServerOutboundUrl}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                <TextBox Text="{Binding ServerInoundUrl}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
-            <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal" Canvas.Left="22" Canvas.Top="139">
+            <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal" Margin="0,50,0,0">
                 <Label FontSize="15" Content="Server port:" />
-                <TextBox Text="{Binding ServerOutboundPort}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                <TextBox Text="{Binding ServerInboundPort}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
-            <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Vertical" Canvas.Left="252" Canvas.Top="139">
-                <Label FontSize="12" Content="Http response message" />
-                <Label Content="{Binding HttpResponseMsg}" FontSize="15" VerticalAlignment="Center"  />
+            <WrapPanel Margin="0,100,0,0" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+                <Label FontSize="15" Content="Client ou address:" />
+                <TextBox Text="{Binding ClientOutboundUrl}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+            </WrapPanel>
+            <WrapPanel Margin="0,140,0,0" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+                <Label FontSize="15" Content="Client outbound port:" />
+                <TextBox Text="{Binding ClientOutboundPort}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
 
-            <ListView ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" Canvas.Left="22" Canvas.Top="110" VerticalAlignment="Center">
+            <DockPanel Width="300" Margin="0,220,0,0" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+                <Label FontSize="15" Content="Message body (JSON)" DockPanel.Dock="Top" />
+                <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" Height="200" HorizontalAlignment="Stretch" Text="{Binding MessageBody}" FontSize="15"/>
+            </DockPanel>
+
+            <ListView VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" Margin="0,460,0,0" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" VerticalAlignment="Center" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>

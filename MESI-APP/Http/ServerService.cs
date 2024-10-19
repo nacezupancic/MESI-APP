@@ -5,12 +5,12 @@ using System.Net;
 
 namespace MESI_APP.Http
 {
-    public class Server 
+    public class ServerService 
     {
         private HttpListener _httpListener;
         public event Action<ReceivedRequestDTO> RequestReceived;
         private bool _isRunning;
-        public Server() {
+        public ServerService() {
             InitListener();
         }
         public async Task Start()
