@@ -1,8 +1,11 @@
 ﻿using MESI_APP.Commands;
 using MESI_APP.Http;
+using MESI_APP.Models;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MESI_APP.ViewModels
@@ -47,6 +50,16 @@ namespace MESI_APP.ViewModels
                 OnPropertyChanged();
             }
         }
+        private ObservableCollection<ReceivedRequestDTO> _receivedRequests;
+        public ObservableCollection<ReceivedRequestDTO> ReceivedRequests
+        {
+            get => _receivedRequests;
+            set
+            {
+                _receivedRequests = value;
+                OnPropertyChanged();
+            }
+        }
         public MainViewModel(Server server)
         {
             _httpServer = server;
@@ -56,6 +69,7 @@ namespace MESI_APP.ViewModels
             SaveSettingsCommand = new RelayCommand(async execute => await SaveSettings());
             StartServerCommand = new RelayCommand(async execute => await StartServer());
             StopServerCommand = new RelayCommand(execute => StopServer());
+            ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
         }
 
         private async Task SaveSettings() {
@@ -72,9 +86,18 @@ namespace MESI_APP.ViewModels
             _httpServer.Stop();
         }
 
-        private void OnRequestReceived(string data)
+        private void OnRequestReceived(ReceivedRequestDTO dto)
         {
-            HttpResponseMsg = data;
+            if (Application.Current.Dispatcher.CheckAccess())
+            {
+                // We are on the UI thread, safe to update the collection
+                ReceivedRequests.Add(dto);
+            }
+            else
+            {
+                // We're on a background thread, invoke on the UI thread
+                Application.Current.Dispatcher.Invoke(() => OnRequestReceived(dto));
+            }
         }
 
     }

@@ -28,6 +28,17 @@
                 <Label FontSize="12" Content="Http response message" />
                 <Label Content="{Binding HttpResponseMsg}" FontSize="15" VerticalAlignment="Center"  />
             </WrapPanel>
+
+            <ListView ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" Canvas.Left="22" Canvas.Top="110" VerticalAlignment="Center">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>
+                        <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" Width="200"/>
+                        <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=Timestamp, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
+                        <GridViewColumn Header="Headers" DisplayMemberBinding="{Binding Headers}" Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </Canvas>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using MESI_APP.Models;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 
@@ -7,7 +8,7 @@ namespace MESI_APP.Http
     public class Server 
     {
         private HttpListener _httpListener;
-        public event Action<string> RequestReceived;
+        public event Action<ReceivedRequestDTO> RequestReceived;
         private bool _isRunning;
         public Server() {
             InitListener();
@@ -39,15 +40,18 @@ namespace MESI_APP.Http
 
         private async Task HandleRequest(HttpListenerContext context)
         {
+            DateTime dt = DateTime.Now;
             var response = context.Response;
-            var headers = context.Request.Headers;
+            var request = context.Request;
+            var headers = request.Headers;
             string content = "";
-            using (var stream = new StreamReader(context.Request.InputStream))
+            using (var stream = new StreamReader(request.InputStream))
             {
                 content = stream.ReadToEnd();
             }
 
-            RequestReceived?.Invoke(content);            
+            RequestReceived?.Invoke(new ReceivedRequestDTO(dt,content,string.Join('|', request.Headers.AllKeys), request.HttpMethod));
+            response.Close();
         }
 
         public void ConfigServer(string url, int port) {
