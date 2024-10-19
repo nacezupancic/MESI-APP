@@ -17,10 +17,10 @@ namespace MESI_APP.Views
 
 
         private MainViewModel _mainViewModel;
-        public MainWindow()
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
-            _mainViewModel = new MainViewModel();
+            _mainViewModel = viewModel;
             this.DataContext = _mainViewModel;
         }
         private void Element_MouseDown(object sender, MouseButtonEventArgs e)

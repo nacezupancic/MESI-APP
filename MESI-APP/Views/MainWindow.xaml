@@ -12,10 +12,21 @@
         </Grid.ColumnDefinitions>
         <StackPanel Background="LightGray" Orientation="Vertical" Grid.Column="0">
             <Button Margin="10" FontSize="15" Command="{Binding SaveSettingsCommand}" Content="Save settings" />
+            <Button Margin="10" FontSize="15" Command="{Binding StartServerCommand}" Content="Start server" />
+            <Button Margin="10" FontSize="15" Command="{Binding StopServerCommand}" Content="Stop Server" />
         </StackPanel>
         <Canvas Name="MesiCanvas" Grid.Column="1" Background="White" Margin="10">
-            <WrapPanel Background="LightGreen" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
-                <TextBox Margin="10" Text="{Binding ServerOutboundUrl}" Width="100" FontSize="15" Background="LightBlue" />
+            <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+                <Label FontSize="15" Content="Server address:" />
+                <TextBox Text="{Binding ServerOutboundUrl}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+            </WrapPanel>
+            <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal" Canvas.Left="22" Canvas.Top="139">
+                <Label FontSize="15" Content="Server port:" />
+                <TextBox Text="{Binding ServerOutboundPort}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+            </WrapPanel>
+            <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Vertical" Canvas.Left="252" Canvas.Top="139">
+                <Label FontSize="12" Content="Http response message" />
+                <Label Content="{Binding HttpResponseMsg}" FontSize="15" VerticalAlignment="Center"  />
             </WrapPanel>
         </Canvas>
     </Grid>
