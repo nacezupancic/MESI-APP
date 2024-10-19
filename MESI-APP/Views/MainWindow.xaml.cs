@@ -39,8 +39,13 @@ namespace MESI_APP.Views
         {
             if (isDragging && draggedElement != null)
             {
-                // Calculate the new position for the dragged element
                 Point mousePosition = e.GetPosition(MesiCanvas);
+
+                //If any object has any margin set, we have to remove so we wont misscalculate the final locaiton
+                if (draggedElement is FrameworkElement frameworkElement)
+                {
+                    frameworkElement.Margin = new Thickness(0);
+                }
 
                 // Get canvas weight/height, used to limit draggable element
                 double canvasWidth = MesiCanvas.ActualWidth;
