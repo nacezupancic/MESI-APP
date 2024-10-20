@@ -1,4 +1,5 @@
 ﻿using MESI_APP.Http;
+using MESI_APP.Services;
 using MESI_APP.ViewModels;
 using MESI_APP.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,8 @@ namespace MESI_APP
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<ServerService>();
             services.AddSingleton<ClientService>();
+            services.AddSingleton<SettingsService>();
+            services.AddSingleton<FileManagementService>();
         }
     }
 

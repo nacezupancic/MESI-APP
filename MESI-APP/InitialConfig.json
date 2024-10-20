@@ -1,0 +1,38 @@
+{
+  "ServerInboundUrlWrapper": {
+    "TextValue": "http://localhost",
+    "CanvasLeft": 20,
+    "CanvasTop": 17.6,
+    "BindableName": "ServerInboundUrlWrapper"
+  },
+  "ServerInboundPortWrapper": {
+    "Port": 65432,
+    "CanvasLeft": 20,
+    "CanvasTop": 70,
+    "BindableName": "ServerInboundPortWrapper"
+  },
+  "ClientOutboundUrlWrapper": {
+    "TextValue": "http://localhost",
+    "CanvasLeft": 20,
+    "CanvasTop": 120,
+    "BindableName": "ClientOutboundUrlWrapper"
+  },
+  "ClientOutboundPortWrapper": {
+    "Port": 65432,
+    "CanvasLeft": 20,
+    "CanvasTop": 170,
+    "BindableName": "ClientOutboundPortWrapper"
+  },
+  "MessageBodyWrapper": {
+    "TextValue": "{\r\n    \u0022FirstName\u0022 : \u0022Janez\u0022,\r\n    \u0022LastName\u0022 : \u0022Novak\u0022,\r\n    \u0022Company\u0022 : \u0022MESI\u0022\r\n}",
+    "CanvasLeft": 20,
+    "CanvasTop": 220,
+    "BindableName": "MessageBodyWrapper"
+  },
+  "ReceivedRequestsWrapper": {
+    "TextValue": null,
+    "CanvasLeft": 20,
+    "CanvasTop": 480,
+    "BindableName": "ReceivedRequestsWrapper"
+  }
+}

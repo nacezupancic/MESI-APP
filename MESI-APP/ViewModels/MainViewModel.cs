@@ -2,8 +2,10 @@
 using MESI_APP.Http;
 using MESI_APP.Models;
 using MESI_APP.Models.SaveableCanvasModels;
+using MESI_APP.Services;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
@@ -12,8 +14,10 @@ namespace MESI_APP.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private ServerService _httpServer;
-        private ClientService _clientService;
+        private readonly ServerService _httpServer;
+        private readonly ClientService _clientService;
+        private readonly SettingsService _settingsService;
+        private List<PropertyInfo> _canvasPropertyInfo;
 
         #region Binding properties
         public ICommand SaveSettingsCommand { get; set; }
@@ -103,25 +107,28 @@ namespace MESI_APP.ViewModels
         }
         #endregion
         public void InitBindings() {
+            _canvasPropertyInfo = new List<PropertyInfo>();
             foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
             {
                 var instance = Activator.CreateInstance(property.PropertyType);
                 ((CanvasPosition)instance).BindableName = property.Name;
                 property.SetValue(this, instance);
+                _canvasPropertyInfo.Add(property);
             }
         }
-        public MainViewModel(ServerService server, ClientService clientService)
+        public MainViewModel(ServerService server, ClientService clientService, SettingsService settingsService)
         {
             InitBindings();
             _httpServer = server;
             _httpServer.RequestReceived += OnRequestReceived;
             _clientService = clientService;
+            _settingsService = settingsService;
 
             ServerInboundUrlWrapper.TextValue = "http://localhost";
             SaveSettingsCommand = new RelayCommand(async execute => await SaveSettings());
             StartServerCommand = new RelayCommand(async execute => await StartServer());
             //StopServerCommand = new RelayCommand(execute => StopServer());
-            StopServerCommand = new RelayCommand(async execute => await GetSettings());
+            StopServerCommand = new RelayCommand(async execute => await LoadConfiguration());
             SendRequestCommand = new RelayCommand(async execute => await SendRequest());
             ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
         }
@@ -131,10 +138,9 @@ namespace MESI_APP.ViewModels
             await _clientService.SendPostRequest($"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/", MessageBodyWrapper.TextValue);
         }
 
-        public async Task GetSettings() {
-            var fileContent = await File.ReadAllTextAsync("config.json");
-            var jsonDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(fileContent);            
-            foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
+        public async Task LoadConfiguration() {
+            var jsonDict = await _settingsService.GetSettings();           
+            foreach (var property in _canvasPropertyInfo)
             {
                 if (jsonDict.ContainsKey(property.Name) && typeof(CanvasPosition).IsAssignableFrom(property.PropertyType))
                 {
@@ -146,19 +152,13 @@ namespace MESI_APP.ViewModels
         }
 
         private async Task SaveSettings() {
-            string file = "config.json";
-            
             Dictionary<string, object> dict = new Dictionary<string, object>();
-            foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType)))
+            foreach (var property in _canvasPropertyInfo)
+                //foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType)))
             {
                 dict[property.Name] = property.GetValue(this);
             }
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-            var jsonString = JsonSerializer.Serialize(dict,options); ;
-            File.WriteAllText(file, jsonString);
+            await _settingsService.SaveSettings(dict);            
         }
 
         private async Task StartServer()
