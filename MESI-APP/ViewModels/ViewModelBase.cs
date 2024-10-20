@@ -15,5 +15,5 @@ namespace MESI_APP.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
+    }    
 }

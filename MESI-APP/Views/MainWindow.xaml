@@ -17,31 +17,31 @@
             <CheckBox HorizontalAlignment="Center" IsChecked="{Binding AutoSave}" FontSize="15" Content="Autosave" />
             <Button Margin="10" FontSize="15" Command="{Binding SendRequestCommand}" Content="Send request" />
         </StackPanel>
-        
+
         <Canvas Name="MesiCanvas" Grid.Column="1" Background="White" Margin="10">
-            <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+            <WrapPanel Canvas.Left="{Binding ServerInboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
                 <Label FontSize="15" Content="Server address:" />
-                <TextBox Text="{Binding ServerInoundUrl}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                <TextBox Text="{Binding ServerInboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
-            <WrapPanel Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal" Margin="0,50,0,0">
+            <WrapPanel Canvas.Left="{Binding ServerInboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
                 <Label FontSize="15" Content="Server port:" />
-                <TextBox Text="{Binding ServerInboundPort}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                <TextBox Text="{Binding ServerInboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
-            <WrapPanel Margin="0,100,0,0" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+            <WrapPanel Canvas.Left="{Binding ClientOutboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
                 <Label FontSize="15" Content="Client ou address:" />
-                <TextBox Text="{Binding ClientOutboundUrl}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                <TextBox Text="{Binding ClientOutboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
-            <WrapPanel Margin="0,140,0,0" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+            <WrapPanel Canvas.Left="{Binding ClientOutboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
                 <Label FontSize="15" Content="Client outbound port:" />
-                <TextBox Text="{Binding ClientOutboundPort}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                <TextBox Text="{Binding ClientOutboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
 
-            <DockPanel Width="300" Margin="0,220,0,0" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+            <DockPanel Canvas.Left="{Binding MessageBodyWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding MessageBodyWrapper.CanvasTop, Mode=TwoWay}" Width="300" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
                 <Label FontSize="15" Content="Message body (JSON)" DockPanel.Dock="Top" />
-                <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" Height="200" HorizontalAlignment="Stretch" Text="{Binding MessageBody}" FontSize="15"/>
+                <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" Height="200" HorizontalAlignment="Stretch" Text="{Binding MessageBodyWrapper.TextValue}" FontSize="15"/>
             </DockPanel>
 
-            <ListView VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" Margin="0,460,0,0" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" VerticalAlignment="Center" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+            <ListView Canvas.Left="{Binding ReceivedRequestsWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ReceivedRequestsWrapper.CanvasTop, Mode=TwoWay}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" VerticalAlignment="Center" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>

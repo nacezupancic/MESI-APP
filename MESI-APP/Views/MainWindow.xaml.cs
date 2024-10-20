@@ -68,7 +68,7 @@ namespace MESI_APP.Views
             }
         }
 
-        private void Element_MouseUp(object sender, MouseButtonEventArgs e)
+        private async void Element_MouseUp(object sender, MouseButtonEventArgs e)
         {
             isDragging = false;
 
@@ -77,7 +77,9 @@ namespace MESI_APP.Views
 
                 draggedElement.ReleaseMouseCapture(); 
                 draggedElement = null;
+                await _mainViewModel.ElementDragged();
             }
+
         }
     }
 }
