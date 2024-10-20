@@ -1,9 +1,11 @@
 ﻿using MESI_APP.Commands;
 using MESI_APP.Http;
 using MESI_APP.Models;
+using MESI_APP.Models.Enums;
 using MESI_APP.Models.SaveableCanvasModels;
 using MESI_APP.Services;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -17,6 +19,7 @@ namespace MESI_APP.ViewModels
         private readonly ServerService _httpServer;
         private readonly ClientService _clientService;
         private readonly SettingsService _settingsService;
+        private readonly LoggerService _loggerService;
         private List<PropertyInfo> _canvasPropertyInfo;
 
         #region Binding properties
@@ -105,20 +108,32 @@ namespace MESI_APP.ViewModels
                 OnPropertyChanged();
             }
         }
-        #endregion
-        public void InitBindings() {
-            _canvasPropertyInfo = new List<PropertyInfo>();
-            foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
+        private ObservableCollection<LoggerMsg> _logList;
+        public ObservableCollection<LoggerMsg> LogList
+        {
+            get => _logList;
+            set
             {
-                var instance = Activator.CreateInstance(property.PropertyType);
-                ((CanvasPosition)instance).BindableName = property.Name;
-                property.SetValue(this, instance);
-                _canvasPropertyInfo.Add(property);
+                _logList = value;
+                OnPropertyChanged();
             }
         }
-        public MainViewModel(ServerService server, ClientService clientService, SettingsService settingsService)
+        private Stringcanvas _loggerWrapper { get; set; }
+        public Stringcanvas LoggerWrapper
+        {
+            get => _loggerWrapper;
+            set
+            {
+                _loggerWrapper = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion        
+        public MainViewModel(ServerService server, ClientService clientService, SettingsService settingsService, LoggerService loggerService)
         {
             InitBindings();
+            _loggerService = loggerService;
+            _loggerService.OnLog += HandleLog;
             _httpServer = server;
             _httpServer.RequestReceived += OnRequestReceived;
             _clientService = clientService;
@@ -131,8 +146,19 @@ namespace MESI_APP.ViewModels
             StopServerCommand = new RelayCommand(async execute => await LoadConfiguration());
             SendRequestCommand = new RelayCommand(async execute => await SendRequest());
             ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
+            LogList = new ObservableCollection<LoggerMsg>();
         }
-
+        public void InitBindings()
+        {
+            _canvasPropertyInfo = new List<PropertyInfo>();
+            foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
+            {
+                var instance = Activator.CreateInstance(property.PropertyType);
+                ((CanvasPosition)instance).BindableName = property.Name;
+                property.SetValue(this, instance);
+                _canvasPropertyInfo.Add(property);
+            }
+        }
 
         public async Task SendRequest() {
             await _clientService.SendPostRequest($"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/", MessageBodyWrapper.TextValue);
@@ -170,7 +196,14 @@ namespace MESI_APP.ViewModels
         {
             _httpServer.Stop();
         }
-
+        private void HandleLog(LoggerMsg log)
+        {
+            // UI can be only updated from main thread
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                LogList.Insert(0,log);
+            });
+        }
         private void OnRequestReceived(ReceivedRequestDTO dto)
         {
             // UI can be only updated from main thread

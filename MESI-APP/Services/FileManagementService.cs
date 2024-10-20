@@ -10,7 +10,11 @@ namespace MESI_APP.Services
 {
     public class FileManagementService
     {
-        public FileManagementService() { }
+        private const string TAG = "FileManagementService";
+        private readonly LoggerService _logger;
+        public FileManagementService(LoggerService loggerService) {
+            _logger = loggerService;
+        }
 
         public bool FileExists(string filepath) => File.Exists(filepath);
 
@@ -24,6 +28,7 @@ namespace MESI_APP.Services
             }
             try
             {
+
                 return await File.ReadAllTextAsync(filePath);
             }
             catch (Exception ex)
@@ -34,13 +39,15 @@ namespace MESI_APP.Services
         }
 
         public async Task<bool> SaveToFile(string content, string filePath) {
+            _logger.Log($"{TAG}|SaveToFile", Models.Enums.LogErrorEnum.Info, $"Saving content to file {filePath}");
+
             try
             {
                 await File.WriteAllTextAsync(filePath, content);
                 return true;
             }
             catch (Exception e) {
-                Debug.WriteLine(e.Message);
+                _logger.Log($"{TAG}|SaveToFile", Models.Enums.LogErrorEnum.Error, $"Error saving to file: {e.Message}");
                 return false;
             }
         }

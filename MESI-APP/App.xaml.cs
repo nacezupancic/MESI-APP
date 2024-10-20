@@ -42,6 +42,7 @@ namespace MESI_APP
             services.AddSingleton<ClientService>();
             services.AddSingleton<SettingsService>();
             services.AddSingleton<FileManagementService>();
+            services.AddSingleton<LoggerService>();
         }
     }
 
