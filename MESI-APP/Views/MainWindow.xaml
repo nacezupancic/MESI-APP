@@ -11,9 +11,10 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Background="LightGray" Orientation="Vertical" Grid.Column="0">
-            <Button Margin="10" FontSize="15" Command="{Binding SaveSettingsCommand}" Content="Save settings" />
             <Button Margin="10" FontSize="15" Command="{Binding StartServerCommand}" Content="Start server" />
             <Button Margin="10" FontSize="15" Command="{Binding StopServerCommand}" Content="Stop Server" />
+            <Button Margin="10" FontSize="15" Command="{Binding SaveSettingsCommand}" Content="Save settings" />
+            <Button Margin="10" FontSize="15" Command="{Binding ResetSettingsCommand}" Content="Reset settings" />
             <CheckBox HorizontalAlignment="Center" IsChecked="{Binding AutoSave}" FontSize="15" Content="Autosave" />
             <Button Margin="10" FontSize="15" Command="{Binding SendRequestCommand}" Content="Send request" />
         </StackPanel>

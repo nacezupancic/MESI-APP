@@ -24,6 +24,7 @@ namespace MESI_APP.ViewModels
 
         #region Binding properties
         public ICommand SaveSettingsCommand { get; set; }
+        public ICommand ResetSettingsCommand { get; set; }
         public ICommand StartServerCommand { get; set; }
         public ICommand StopServerCommand { get; set; }
         public ICommand SendRequestCommand { get; set; }
@@ -138,13 +139,11 @@ namespace MESI_APP.ViewModels
             _httpServer.RequestReceived += OnRequestReceived;
             _clientService = clientService;
             _settingsService = settingsService;
-
-            ServerInboundUrlWrapper.TextValue = "http://localhost";
             SaveSettingsCommand = new RelayCommand(async execute => await SaveSettings());
+            ResetSettingsCommand = new RelayCommand(async execute => await ResetSettings());
             StartServerCommand = new RelayCommand(async execute => await StartServer());
-            //StopServerCommand = new RelayCommand(execute => StopServer());
-            StopServerCommand = new RelayCommand(async execute => await LoadConfiguration());
             SendRequestCommand = new RelayCommand(async execute => await SendRequest());
+            StopServerCommand = new RelayCommand(execute => StopServer());
             ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
             LogList = new ObservableCollection<LoggerMsg>();
         }
@@ -164,8 +163,8 @@ namespace MESI_APP.ViewModels
             await _clientService.SendPostRequest($"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/", MessageBodyWrapper.TextValue);
         }
 
-        public async Task LoadConfiguration() {
-            var jsonDict = await _settingsService.GetSettings();           
+        public async Task LoadConfiguration(bool init = false) {
+            var jsonDict = await _settingsService.GetSettings(init);           
             foreach (var property in _canvasPropertyInfo)
             {
                 if (jsonDict.ContainsKey(property.Name) && typeof(CanvasPosition).IsAssignableFrom(property.PropertyType))
@@ -185,6 +184,12 @@ namespace MESI_APP.ViewModels
                 dict[property.Name] = property.GetValue(this);
             }
             await _settingsService.SaveSettings(dict);            
+        }
+
+        private async Task ResetSettings()
+        {
+            await LoadConfiguration(true);
+            await SaveSettings();
         }
 
         private async Task StartServer()

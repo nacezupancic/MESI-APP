@@ -22,6 +22,11 @@ namespace MESI_APP.Views
             InitializeComponent();
             _mainViewModel = viewModel;
             this.DataContext = _mainViewModel;
+            Loaded += OnLoaded;
+        }
+        private async void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            await _mainViewModel.LoadConfiguration();
         }
         private void Element_MouseDown(object sender, MouseButtonEventArgs e)
         {

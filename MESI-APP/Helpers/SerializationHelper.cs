@@ -10,12 +10,17 @@ namespace MESI_APP.Helpers
 {
     public static class SerializationHelper
     {
+        private static JsonSerializerOptions OptionsIntented = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
         public static async Task<string> PrepareJsonString(object serializationObject)
         {
+           
             string jsonString;
             using (var ms = new MemoryStream())
             {
-                await JsonSerializer.SerializeAsync(ms, serializationObject);
+                await JsonSerializer.SerializeAsync(ms, serializationObject, OptionsIntented);
                 ms.Position = 0;
                 using var reader = new StreamReader(ms);
                 jsonString = await reader.ReadToEndAsync();
