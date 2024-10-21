@@ -40,5 +40,17 @@
     "CanvasLeft": 20,
     "CanvasTop": 550,
     "BindableName": "LoggerWrapper"
+  },
+
+  "HeadersCanvas": {
+    "HeaderList": [
+      {
+        "HeaderKey": "Header1",
+        "HeaderValue": "Value1"
+      }
+    ],
+    "CanvasLeft": 522.4000000000001,
+    "CanvasTop": 109.6,
+    "BindableName": "HeadersCanvas"
   }
 }

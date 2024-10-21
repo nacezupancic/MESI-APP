@@ -62,6 +62,13 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+
+            <DataGrid Canvas.Left="{Binding HeadersCanvas.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding HeadersCanvas.CanvasTop, Mode=TwoWay}" ItemsSource="{Binding HeadersCanvas.HeaderList}" AutoGenerateColumns="False" CanUserAddRows="True" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Header Key" Binding="{Binding HeaderKey, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Header Value" Binding="{Binding HeaderValue, UpdateSourceTrigger=PropertyChanged}" />
+                </DataGrid.Columns>
+            </DataGrid>
         </Canvas>
     </Grid>
 </Window>

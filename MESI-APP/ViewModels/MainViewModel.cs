@@ -49,7 +49,9 @@ namespace MESI_APP.ViewModels
         private ObservableCollection<LoggerMsg> _logList;
         
         [ObservableProperty]
-        private Stringcanvas _loggerWrapper;       
+        private Stringcanvas _loggerWrapper;
+        [ObservableProperty]
+        private RequestHeaderCanvas _headersCanvas;
         #endregion        
         public MainViewModel(ServerService server, ClientService clientService, SettingsService settingsService, LoggerService loggerService)
         {
@@ -68,6 +70,9 @@ namespace MESI_APP.ViewModels
             _canvasPropertyInfo = new List<PropertyInfo>();
             LogList = new ObservableCollection<LoggerMsg>();
             ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
+            var xd = this.GetType().GetProperties();
+            var xd2 = this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType));
+            var xd3 = this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite);
             foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
             {
                 var instance = Activator.CreateInstance(property.PropertyType);
@@ -97,7 +102,6 @@ namespace MESI_APP.ViewModels
         private async Task SaveSettings() {
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (var property in _canvasPropertyInfo)
-                //foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType)))
             {
                 dict[property.Name] = property.GetValue(this);
             }
