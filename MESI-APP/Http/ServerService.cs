@@ -1,4 +1,5 @@
 ﻿using MESI_APP.Models;
+using MESI_APP.Services;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -7,16 +8,19 @@ namespace MESI_APP.Http
 {
     public class ServerService 
     {
+        private readonly LoggerService _logger;
         private HttpListener _httpListener;
         public event Action<ReceivedRequestDTO> RequestReceived;
         private bool _isRunning;
-        public ServerService() {
+        public ServerService(LoggerService loggerService) {
             InitListener();
+            _logger = loggerService;
         }
         public async Task Start()
         {
             try
             {
+                _logger.Info($"Starting HTTP server: {_httpListener.Prefixes.FirstOrDefault()}");
                 if (_isRunning)
                     return;
                 _isRunning = true;
@@ -33,6 +37,7 @@ namespace MESI_APP.Http
             }
             catch (Exception ex)
             {
+                _logger.Error($"Error starting HTTP server: {ex.Message}");
                 _isRunning = false;
                 Debug.WriteLine($"{ex.Message}");
             }

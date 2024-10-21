@@ -57,7 +57,6 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="50"/>
-                        <GridViewColumn Header="Requested from" DisplayMemberBinding="{Binding RequestedFrom}" Width="100"/>
                         <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=LoggedAt, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
                         <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Msg}" Width="300"/>
                     </GridView>

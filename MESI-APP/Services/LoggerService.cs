@@ -12,9 +12,13 @@ namespace MESI_APP.Services
     {
         public event Action<LoggerMsg> OnLog;
 
-        public void Log(string requestedfrom, LogErrorEnum type, string msg)
+        public void Info(string msg)
         {
-            OnLog?.Invoke(new LoggerMsg(requestedfrom, type, msg));
+            OnLog?.Invoke(new LoggerMsg(LogErrorEnum.Info, msg));
+        }
+        public void Error(string msg)
+        {
+            OnLog?.Invoke(new LoggerMsg(LogErrorEnum.Error, msg));
         }
     }
 }

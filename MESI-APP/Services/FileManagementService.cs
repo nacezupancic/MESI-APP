@@ -39,7 +39,7 @@ namespace MESI_APP.Services
         }
 
         public async Task<bool> SaveToFile(string content, string filePath) {
-            _logger.Log($"{TAG}|SaveToFile", Models.Enums.LogErrorEnum.Info, $"Saving content to file {filePath}");
+            _logger.Info($"Saving content to file {filePath}");
 
             try
             {
@@ -47,7 +47,7 @@ namespace MESI_APP.Services
                 return true;
             }
             catch (Exception e) {
-                _logger.Log($"{TAG}|SaveToFile", Models.Enums.LogErrorEnum.Error, $"Error saving to file: {e.Message}");
+                _logger.Error($"Error saving to file: {e.Message}");
                 return false;
             }
         }

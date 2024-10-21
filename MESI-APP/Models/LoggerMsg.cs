@@ -9,12 +9,10 @@ namespace MESI_APP.Models
 {
     public class LoggerMsg
     {
-        public string RequestedFrom { get; set; }
         public LogErrorEnum Type { get; set; }
         public string Msg { get; set; }
         public DateTime LoggedAt { get; set; }
-        public LoggerMsg(string requesteFrom, LogErrorEnum type, string msg ) {
-            RequestedFrom = requesteFrom;
+        public LoggerMsg(LogErrorEnum type, string msg ) {
             Type = type;
             Msg = msg;
             LoggedAt = DateTime.Now;
