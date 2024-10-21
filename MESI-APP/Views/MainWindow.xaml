@@ -5,6 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1100">
+    <Window.Resources>
+        <Style x:Key="CommonMouseEvents" TargetType="FrameworkElement">
+            <EventSetter Event="MouseDown" Handler="Element_MouseDown"/>
+            <EventSetter Event="MouseUp" Handler="Element_MouseUp"/>
+            <EventSetter Event="MouseMove" Handler="Element_MouseMove"/>
+        </Style>
+    </Window.Resources>
     <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -20,29 +27,29 @@
         </StackPanel>
 
         <Canvas Name="MesiCanvas" Grid.Column="1" Background="White" Margin="10">
-            <WrapPanel Canvas.Left="{Binding ServerInboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+            <WrapPanel Canvas.Left="{Binding ServerInboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
                 <Label FontSize="15" Content="Server address:" />
                 <TextBox Text="{Binding ServerInboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
-            <WrapPanel Canvas.Left="{Binding ServerInboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+            <WrapPanel Canvas.Left="{Binding ServerInboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
                 <Label FontSize="15" Content="Server port:" />
                 <TextBox Text="{Binding ServerInboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
-            <WrapPanel Canvas.Left="{Binding ClientOutboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+            <WrapPanel Canvas.Left="{Binding ClientOutboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
                 <Label FontSize="15" Content="Client ou address:" />
                 <TextBox Text="{Binding ClientOutboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
-            <WrapPanel Canvas.Left="{Binding ClientOutboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove" Orientation="Horizontal">
+            <WrapPanel Canvas.Left="{Binding ClientOutboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
                 <Label FontSize="15" Content="Client outbound port:" />
                 <TextBox Text="{Binding ClientOutboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
 
-            <DockPanel Canvas.Left="{Binding MessageBodyWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding MessageBodyWrapper.CanvasTop, Mode=TwoWay}" Width="300" Background="LightBlue" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+            <DockPanel Canvas.Left="{Binding MessageBodyWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding MessageBodyWrapper.CanvasTop, Mode=TwoWay}" Width="300" Background="LightBlue" Style="{StaticResource CommonMouseEvents}">
                 <Label FontSize="15" Content="Message body (JSON)" DockPanel.Dock="Top" />
                 <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" Height="200" HorizontalAlignment="Stretch" Text="{Binding MessageBodyWrapper.TextValue}" FontSize="15"/>
             </DockPanel>
 
-            <ListView Canvas.Left="{Binding ReceivedRequestsWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ReceivedRequestsWrapper.CanvasTop, Mode=TwoWay}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" VerticalAlignment="Center" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+            <ListView Canvas.Left="{Binding ReceivedRequestsWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ReceivedRequestsWrapper.CanvasTop, Mode=TwoWay}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CommonMouseEvents}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>
@@ -53,7 +60,7 @@
                 </ListView.View>
             </ListView>
 
-            <ListView Canvas.Left="{Binding LoggerWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding LoggerWrapper.CanvasTop, Mode=TwoWay}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding LogList}" HorizontalAlignment="Left" VerticalAlignment="Center" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+            <ListView Canvas.Left="{Binding LoggerWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding LoggerWrapper.CanvasTop, Mode=TwoWay}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding LogList}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CommonMouseEvents}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="50"/>
@@ -63,7 +70,7 @@
                 </ListView.View>
             </ListView>
 
-            <DataGrid Canvas.Left="{Binding HeadersCanvas.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding HeadersCanvas.CanvasTop, Mode=TwoWay}" ItemsSource="{Binding HeadersCanvas.HeaderList}" AutoGenerateColumns="False" CanUserAddRows="True" MouseDown="Element_MouseDown" MouseUp="Element_MouseUp" MouseMove="Element_MouseMove">
+            <DataGrid Canvas.Left="{Binding HeadersCanvas.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding HeadersCanvas.CanvasTop, Mode=TwoWay}" ItemsSource="{Binding HeadersCanvas.HeaderList}" AutoGenerateColumns="False" CanUserAddRows="True" Style="{StaticResource CommonMouseEvents}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Header Key" Binding="{Binding HeaderKey, UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Header Value" Binding="{Binding HeaderValue, UpdateSourceTrigger=PropertyChanged}" />
