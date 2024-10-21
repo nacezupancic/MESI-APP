@@ -36,7 +36,7 @@
                 <TextBox Text="{Binding ServerInboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
             <WrapPanel Canvas.Left="{Binding ClientOutboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
-                <Label FontSize="15" Content="Client ou address:" />
+                <Label FontSize="15" Content="Client outbound address:" />
                 <TextBox Text="{Binding ClientOutboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
             </WrapPanel>
             <WrapPanel Canvas.Left="{Binding ClientOutboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">

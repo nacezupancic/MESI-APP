@@ -1,47 +1,46 @@
 {
   "ServerInboundUrlWrapper": {
     "TextValue": "http://localhost",
-    "CanvasLeft": 20,
-    "CanvasTop": 17.6,
+    "CanvasLeft": 15,
+    "CanvasTop": 15,
     "BindableName": "ServerInboundUrlWrapper"
   },
   "ServerInboundPortWrapper": {
     "Port": 65432,
-    "CanvasLeft": 20,
-    "CanvasTop": 70,
+    "CanvasLeft": 560,
+    "CanvasTop": 15,
     "BindableName": "ServerInboundPortWrapper"
   },
   "ClientOutboundUrlWrapper": {
     "TextValue": "http://localhost",
-    "CanvasLeft": 20,
-    "CanvasTop": 120,
+    "CanvasLeft": 15,
+    "CanvasTop": 90,
     "BindableName": "ClientOutboundUrlWrapper"
   },
   "ClientOutboundPortWrapper": {
     "Port": 65432,
-    "CanvasLeft": 20,
-    "CanvasTop": 170,
+    "CanvasLeft": 560,
+    "CanvasTop": 90,
     "BindableName": "ClientOutboundPortWrapper"
   },
   "MessageBodyWrapper": {
     "TextValue": "{\r\n    \u0022FirstName\u0022 : \u0022Janez\u0022,\r\n    \u0022LastName\u0022 : \u0022Novak\u0022,\r\n    \u0022Company\u0022 : \u0022MESI\u0022\r\n}",
-    "CanvasLeft": 20,
-    "CanvasTop": 220,
+    "CanvasLeft": 15,
+    "CanvasTop": 165,
     "BindableName": "MessageBodyWrapper"
   },
   "ReceivedRequestsWrapper": {
     "TextValue": null,
-    "CanvasLeft": 20,
-    "CanvasTop": 480,
+    "CanvasLeft": 358.2,
+    "CanvasTop": 200.59999999999997,
     "BindableName": "ReceivedRequestsWrapper"
   },
   "LoggerWrapper": {
     "TextValue": null,
-    "CanvasLeft": 20,
-    "CanvasTop": 550,
+    "CanvasLeft": 356.80000000000007,
+    "CanvasTop": 419.7999999999999,
     "BindableName": "LoggerWrapper"
   },
-
   "HeadersCanvas": {
     "HeaderList": [
       {
@@ -49,8 +48,8 @@
         "HeaderValue": "Value1"
       }
     ],
-    "CanvasLeft": 522.4000000000001,
-    "CanvasTop": 109.6,
+    "CanvasLeft": 17.599999999999852,
+    "CanvasTop": 405,
     "BindableName": "HeadersCanvas"
   }
 }
