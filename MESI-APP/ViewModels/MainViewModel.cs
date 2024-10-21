@@ -1,20 +1,18 @@
-﻿using MESI_APP.Commands;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using MESI_APP.Http;
 using MESI_APP.Models;
-using MESI_APP.Models.Enums;
 using MESI_APP.Models.SaveableCanvasModels;
 using MESI_APP.Services;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Windows;
-using System.Windows.Input;
+
 
 namespace MESI_APP.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    public partial class MainViewModel : ViewModelBase
     {
         private readonly ServerService _httpServer;
         private readonly ClientService _clientService;
@@ -23,112 +21,35 @@ namespace MESI_APP.ViewModels
         private List<PropertyInfo> _canvasPropertyInfo;
 
         #region Binding properties
-        public ICommand SaveSettingsCommand { get; set; }
-        public ICommand ResetSettingsCommand { get; set; }
-        public ICommand StartServerCommand { get; set; }
-        public ICommand StopServerCommand { get; set; }
-        public ICommand SendRequestCommand { get; set; }
+        [ObservableProperty]
         private Stringcanvas _serverInboundUrlWrapper;
-        public Stringcanvas ServerInboundUrlWrapper
-        {
-            get => _serverInboundUrlWrapper;
-            set
-            {
-                _serverInboundUrlWrapper = value;
-                OnPropertyChanged();
-            }
-        }
+
+        [ObservableProperty]
         private PortCanvas _serverInboundPortWrapper;
-        public PortCanvas ServerInboundPortWrapper
-        {
-            get => _serverInboundPortWrapper;
-            set
-            {   _serverInboundPortWrapper = value;
-                OnPropertyChanged();
-            }
-        }
+
+        [ObservableProperty]
         private Stringcanvas _clientOutboundUrlWrapper;
-        public Stringcanvas ClientOutboundUrlWrapper
-        {
-            get => _clientOutboundUrlWrapper;
-            set
-            {
-                _clientOutboundUrlWrapper = value;
-                OnPropertyChanged();
-            }
-        }
+
+        [ObservableProperty]
         private PortCanvas _clientOutboundPortWrapper;
-        public PortCanvas ClientOutboundPortWrapper
-        {
-            get => _clientOutboundPortWrapper;
-            set
-            {
-                _clientOutboundPortWrapper = value;
-                OnPropertyChanged();
-            }
-        }
-        private Stringcanvas _messageBodyWrapper;
-        public Stringcanvas MessageBodyWrapper
-        {
-            get => _messageBodyWrapper;
-            set
-            {
-                _messageBodyWrapper = value;
-                OnPropertyChanged();
-            }
-        }
+
+        [ObservableProperty]
+        private Stringcanvas _messageBodyWrapper;      
+        
+        [ObservableProperty]
         private bool _autoSave;
-        public bool AutoSave
-        {
-            get => _autoSave;
-            set
-            {
-                _autoSave = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Stringcanvas _receivedRequestsWrapper { get; set; }
-        public Stringcanvas ReceivedRequestsWrapper
-        {
-            get => _receivedRequestsWrapper;
-            set
-            {
-                _receivedRequestsWrapper = value;
-                OnPropertyChanged();
-            }
-        }
-
+        
+        [ObservableProperty]
+        private Stringcanvas _receivedRequestsWrapper;
+        
+        [ObservableProperty]
         private ObservableCollection<ReceivedRequestDTO> _receivedRequests;
-        public ObservableCollection<ReceivedRequestDTO> ReceivedRequests
-        {
-            get => _receivedRequests;
-            set
-            {
-                _receivedRequests = value;
-                OnPropertyChanged();
-            }
-        }
+        
+        [ObservableProperty]
         private ObservableCollection<LoggerMsg> _logList;
-        public ObservableCollection<LoggerMsg> LogList
-        {
-            get => _logList;
-            set
-            {
-                _logList = value;
-                OnPropertyChanged();
-            }
-        }
-        private Stringcanvas _loggerWrapper { get; set; }
-        public Stringcanvas LoggerWrapper
-        {
-            get => _loggerWrapper;
-            set
-            {
-                _loggerWrapper = value;
-                OnPropertyChanged();
-            }
-        }
+        
+        [ObservableProperty]
+        private Stringcanvas _loggerWrapper;       
         #endregion        
         public MainViewModel(ServerService server, ClientService clientService, SettingsService settingsService, LoggerService loggerService)
         {
@@ -139,12 +60,6 @@ namespace MESI_APP.ViewModels
             _clientService = clientService;
             _settingsService = settingsService;
 
-            SaveSettingsCommand = new RelayCommand(async execute => await SaveSettings());
-            ResetSettingsCommand = new RelayCommand(async execute => await ResetSettings());
-            StartServerCommand = new RelayCommand(async execute => await StartServer());
-            SendRequestCommand = new RelayCommand(async execute => await SendRequest());
-            StopServerCommand = new RelayCommand(execute => StopServer());
-            ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
             _loggerService.OnLog += HandleLog;
             _httpServer.RequestReceived += OnRequestReceived;
         }
@@ -152,6 +67,7 @@ namespace MESI_APP.ViewModels
         {
             _canvasPropertyInfo = new List<PropertyInfo>();
             LogList = new ObservableCollection<LoggerMsg>();
+            ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
             foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
             {
                 var instance = Activator.CreateInstance(property.PropertyType);
@@ -160,8 +76,8 @@ namespace MESI_APP.ViewModels
                 _canvasPropertyInfo.Add(property);
             }
         }
-
-        public async Task SendRequest() {
+        [RelayCommand]
+        private async Task SendRequest() {
             await _clientService.SendPostRequest($"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/", MessageBodyWrapper.TextValue);
         }
 
@@ -177,7 +93,7 @@ namespace MESI_APP.ViewModels
                 }
             }
         }
-
+        [RelayCommand]
         private async Task SaveSettings() {
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (var property in _canvasPropertyInfo)
@@ -187,13 +103,13 @@ namespace MESI_APP.ViewModels
             }
             await _settingsService.SaveSettings(dict);            
         }
-
+        [RelayCommand]
         private async Task ResetSettings()
         {
             await LoadConfiguration(true);
             await SaveSettings();
         }
-
+        [RelayCommand]
         private async Task StartServer()
         {
             if (!ServerInboundPortWrapper.Port.HasValue) return;
@@ -202,6 +118,7 @@ namespace MESI_APP.ViewModels
                 await _httpServer.Start();
             }
         }
+        [RelayCommand]
         private void StopServer()
         {
             _httpServer.Stop();
