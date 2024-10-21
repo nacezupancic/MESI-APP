@@ -20,57 +20,93 @@ namespace MESI_APP.Http
         {
             try
             {
+                // Start HTTP server on set url:port
                 _logger.Info($"Starting HTTP server: {_httpListener.Prefixes.FirstOrDefault()}");
                 if (_isRunning)
+                {
+                    _logger.Info("Server is already running.");
                     return;
+                }
                 _isRunning = true;
                 _httpListener.Start();
-                await Task.Run(async () =>
-                {
-                    while (_isRunning)
-                    {
-                        var context = await _httpListener.GetContextAsync();
-                        await HandleRequest(context);
-                    }
-                });
 
+                while (_isRunning)
+                {
+                    var context = await _httpListener.GetContextAsync();
+                    await HandleRequest(context);
+                }
+
+            }
+            catch (HttpListenerException ex)
+            {
+                _logger.Error($"Http server was stopped: {ex.Message}");
+                InitListener();
             }
             catch (Exception ex)
             {
                 _logger.Error($"Error starting HTTP server: {ex.Message}");
-                _isRunning = false;
                 Debug.WriteLine($"{ex.Message}");
+                InitListener();
             }
         }
 
         private async Task HandleRequest(HttpListenerContext context)
         {
-            DateTime dt = DateTime.Now;
-            var response = context.Response;
-            var request = context.Request;
-            var headers = request.Headers;
-            string content = "";
-            using (var stream = new StreamReader(request.InputStream))
+            try
             {
-                content = stream.ReadToEnd();
-            }
+                DateTime dt = DateTime.Now;
+                var response = context.Response;
+                var request = context.Request;
+                var headers = request.Headers;
+                string content = "";
+                using (var stream = new StreamReader(request.InputStream))
+                {
+                    content = await stream.ReadToEndAsync();
+                }
+                // Send received request to listeners (ViewModel)
+                RequestReceived?.Invoke(new ReceivedRequestDTO(dt, content, string.Join('|', request.Headers.AllKeys), request.HttpMethod));
 
-            RequestReceived?.Invoke(new ReceivedRequestDTO(dt,content,string.Join('|', request.Headers.AllKeys), request.HttpMethod));
-            response.Close();
+                // Prepare response
+                string responseString = "Hello, MESI-APP user!";
+                response.ContentType = "text/plain";
+
+                using (var writer = new StreamWriter(response.OutputStream))
+                {
+                    await writer.WriteAsync(responseString);
+                }
+                response.Close();
+            }
+            catch (Exception ex) {
+                _logger.Error($"Error handling request: {ex.Message}");
+            }
         }
 
-        public void ConfigServer(string url, int port) {
-
+        public bool ConfigServer(string url, int port) {
+            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) || port < 1 || port > 65535)
+            {
+                _logger.Error("Server configuration failed, URL:Port is invalid");
+                return false;
+            }
+            Uri uri = new Uri($"{url}:{port}");
             _httpListener.Prefixes.Clear();
-            _httpListener.Prefixes.Add($"{url}:{port}/");
+            _httpListener.Prefixes.Add(uri.ToString());
+            return true;
         }
 
         public void Stop()
         {
+            if (!_isRunning) {
+                _logger.Info("Server is not running.");
+            }
             _isRunning = false;
-            _httpListener.Stop();
+            if (_httpListener.IsListening)
+            {
+                _httpListener.Stop();
+            }
             _httpListener.Close();
+            // Reinitialize httpListener becasue the current one is disposed
             InitListener();
+        
         }
 
         private void InitListener() {

@@ -133,23 +133,25 @@ namespace MESI_APP.ViewModels
         public MainViewModel(ServerService server, ClientService clientService, SettingsService settingsService, LoggerService loggerService)
         {
             InitBindings();
+
             _loggerService = loggerService;
-            _loggerService.OnLog += HandleLog;
             _httpServer = server;
-            _httpServer.RequestReceived += OnRequestReceived;
             _clientService = clientService;
             _settingsService = settingsService;
+
             SaveSettingsCommand = new RelayCommand(async execute => await SaveSettings());
             ResetSettingsCommand = new RelayCommand(async execute => await ResetSettings());
             StartServerCommand = new RelayCommand(async execute => await StartServer());
             SendRequestCommand = new RelayCommand(async execute => await SendRequest());
             StopServerCommand = new RelayCommand(execute => StopServer());
             ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
-            LogList = new ObservableCollection<LoggerMsg>();
+            _loggerService.OnLog += HandleLog;
+            _httpServer.RequestReceived += OnRequestReceived;
         }
         public void InitBindings()
         {
             _canvasPropertyInfo = new List<PropertyInfo>();
+            LogList = new ObservableCollection<LoggerMsg>();
             foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
             {
                 var instance = Activator.CreateInstance(property.PropertyType);
@@ -194,8 +196,11 @@ namespace MESI_APP.ViewModels
 
         private async Task StartServer()
         {
-            _httpServer.ConfigServer(ServerInboundUrlWrapper.TextValue, ServerInboundPortWrapper.Port.Value);
-            await _httpServer.Start();
+            if (!ServerInboundPortWrapper.Port.HasValue) return;
+            if (_httpServer.ConfigServer(ServerInboundUrlWrapper.TextValue, ServerInboundPortWrapper.Port.Value))
+            {
+                await _httpServer.Start();
+            }
         }
         private void StopServer()
         {
