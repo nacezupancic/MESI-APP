@@ -1,4 +1,11 @@
 {
+  "WindowSize": {
+    "Width": 1200,
+    "Height": 700,
+    "CanvasLeft": null,
+    "CanvasTop": null,
+    "BindableName": "WindowSize"
+  },
   "ServerInboundUrlWrapper": {
     "TextValue": "http://localhost",
     "CanvasLeft": 15,

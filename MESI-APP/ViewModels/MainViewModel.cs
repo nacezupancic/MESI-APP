@@ -22,6 +22,8 @@ namespace MESI_APP.ViewModels
 
         #region Binding properties
         [ObservableProperty]
+        private WindowSize _windowSize;
+        [ObservableProperty]
         private Stringcanvas _serverInboundUrlWrapper;
 
         [ObservableProperty]
@@ -70,9 +72,6 @@ namespace MESI_APP.ViewModels
             _canvasPropertyInfo = new List<PropertyInfo>();
             LogList = new ObservableCollection<LoggerMsg>();
             ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
-            var xd = this.GetType().GetProperties();
-            var xd2 = this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType));
-            var xd3 = this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite);
             foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
             {
                 var instance = Activator.CreateInstance(property.PropertyType);
