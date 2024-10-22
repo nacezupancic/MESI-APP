@@ -1,4 +1,5 @@
-﻿using MESI_APP.Services;
+﻿using MESI_APP.Models.SaveableCanvasModels;
+using MESI_APP.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,20 +26,39 @@ namespace MESI_APP.Http
             _httpClient.Timeout = TimeSpan.FromSeconds(5);
         }
 
-        public async Task<HttpResponseMessage> SendPostRequest(string url, string jsonString) {
+
+
+        public async Task<HttpResponseMessage> SendPostRequest(string url, IEnumerable<HeaderDTO> headers, string jsonString) {
             _logger.Info($"POST {url} was sent.");
             try
             {
                 if (string.IsNullOrWhiteSpace(url))
-                    throw new ArgumentException("URL cannot be null or empty");
+                    throw new ArgumentException("URL cannot be null or empty");                           
 
-                var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
-                var resp = await _httpClient.PostAsync(url, httpContent);
-                if (resp != null)
-                {
-                    _logger.Info($"Server responded with {resp.StatusCode} | {resp.Content}");
+                using (var newRequest = new HttpRequestMessage(HttpMethod.Post, url)) {
+                    // Add headers
+                    if (headers != null)
+                    {
+                        foreach (var h in headers)
+                        {
+                            newRequest.Headers.Clear(); // clear default headers
+                            newRequest.Headers.Add(h.HeaderKey, h.HeaderValue);
+                        }
+                    }
+
+                    using (var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json"))
+                    {
+                        newRequest.Content = httpContent;
+
+                        var resp = await _httpClient.SendAsync(newRequest);
+                        if (resp != null)
+                        {
+                            var content = await resp.Content.ReadAsStringAsync();
+                            _logger.Info($"Server responded with {resp.StatusCode} | {content}");
+                        }
+                        return resp;
+                    }
                 }
-                return resp;
             }
             catch (TaskCanceledException ex) {
                 _logger.Error($"Request timedout: {ex.Message}");
@@ -49,7 +69,6 @@ namespace MESI_APP.Http
                 _logger.Error($"Error sending http request: {ex.Message}");
                 return null;
             }
-
         }
     }
 }

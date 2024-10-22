@@ -81,11 +81,6 @@ namespace MESI_APP.ViewModels
                 _canvasPropertyInfo.Add(property);
             }
         }
-        [RelayCommand]
-        private async Task SendRequest() {
-            await _clientService.SendPostRequest($"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/", MessageBodyWrapper.TextValue);
-        }
-
         public async Task LoadConfiguration(bool init = false) {
             var jsonDict = await _settingsService.GetSettings(init);           
             foreach (var property in _canvasPropertyInfo)
@@ -98,6 +93,13 @@ namespace MESI_APP.ViewModels
                 }
             }
         }
+
+        [RelayCommand]
+        private async Task SendRequest() {
+            var headers = HeadersCanvas.HeaderList.Where(h => !string.IsNullOrEmpty(h.HeaderKey) && !string.IsNullOrEmpty(h.HeaderValue));
+            await _clientService.SendPostRequest($"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/", headers, MessageBodyWrapper.TextValue);
+        }
+
         [RelayCommand]
         private async Task SaveSettings() {
             Dictionary<string, object> dict = new Dictionary<string, object>();

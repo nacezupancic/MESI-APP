@@ -58,13 +58,15 @@ namespace MESI_APP.Http
                 var response = context.Response;
                 var request = context.Request;
                 var headers = request.Headers;
+
                 string content = "";
                 using (var stream = new StreamReader(request.InputStream))
                 {
                     content = await stream.ReadToEndAsync();
                 }
                 // Send received request to listeners (ViewModel)
-                RequestReceived?.Invoke(new ReceivedRequestDTO(dt, content, string.Join('|', request.Headers.AllKeys), request.HttpMethod));
+                var headerValues = request.Headers.AllKeys.Select(x => $"{x} | {request.Headers[x]}");
+                RequestReceived?.Invoke(new ReceivedRequestDTO(dt, content, string.Join('\n', headerValues), request.HttpMethod));
 
                 // Prepare response
                 string responseString = "Hello, MESI-APP user!";

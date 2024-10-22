@@ -87,7 +87,7 @@
             </Border>
 
             <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ReceivedRequestsWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ReceivedRequestsWrapper.CanvasTop, Mode=TwoWay}" >
-                <ListView VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" >
+                <ListView SelectionMode="Single" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="250" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>
@@ -100,7 +100,7 @@
             </Border>
 
             <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding LoggerWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding LoggerWrapper.CanvasTop, Mode=TwoWay}" >
-                <ListView VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding LogList}" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                <ListView SelectionMode="Single" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="150" ItemsSource="{Binding LogList}" HorizontalAlignment="Left" VerticalAlignment="Center" >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="50"/>
