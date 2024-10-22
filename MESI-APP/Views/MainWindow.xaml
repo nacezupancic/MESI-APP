@@ -6,76 +6,120 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1100">
     <Window.Resources>
-        <Style x:Key="CommonMouseEvents" TargetType="FrameworkElement">
+        <!-- Mouse  events and styling of element wrappers - Border -->
+        <Style x:Key="CommonMouseEvents" TargetType="Border">
             <EventSetter Event="MouseDown" Handler="Element_MouseDown"/>
             <EventSetter Event="MouseUp" Handler="Element_MouseUp"/>
             <EventSetter Event="MouseMove" Handler="Element_MouseMove"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="LightBlue"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        
+        <!-- Styling of control buttons -->
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#003A70"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#005A9E"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
+    
     <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Background="LightGray" Orientation="Vertical" Grid.Column="0">
+        <StackPanel Background="LightGray" Orientation="Vertical" Grid.Column="0" Margin="0,40,0,0">
             <Button Margin="10" FontSize="15" Command="{Binding StartServerCommand}" Content="Start server" />
             <Button Margin="10" FontSize="15" Command="{Binding StopServerCommand}" Content="Stop Server" />
             <Button Margin="10" FontSize="15" Command="{Binding SaveSettingsCommand}" Content="Save settings" />
             <Button Margin="10" FontSize="15" Command="{Binding ResetSettingsCommand}" Content="Reset settings" />
-            <CheckBox HorizontalAlignment="Center" IsChecked="{Binding AutoSave}" FontSize="15" Content="Autosave" />
             <Button Margin="10" FontSize="15" Command="{Binding SendRequestCommand}" Content="Send request" />
+            <CheckBox HorizontalAlignment="Center" IsChecked="{Binding AutoSave}" FontSize="15" Content="Autosave" />
         </StackPanel>
 
         <Canvas Name="MesiCanvas" Grid.Column="1" Background="White" Margin="10">
-            <WrapPanel Canvas.Left="{Binding ServerInboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
-                <Label FontSize="15" Content="Server address:" />
-                <TextBox Text="{Binding ServerInboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
-            </WrapPanel>
-            <WrapPanel Canvas.Left="{Binding ServerInboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
-                <Label FontSize="15" Content="Server port:" />
-                <TextBox Text="{Binding ServerInboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
-            </WrapPanel>
-            <WrapPanel Canvas.Left="{Binding ClientOutboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundUrlWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
-                <Label FontSize="15" Content="Client outbound address:" />
-                <TextBox Text="{Binding ClientOutboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
-            </WrapPanel>
-            <WrapPanel Canvas.Left="{Binding ClientOutboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundPortWrapper.CanvasTop, Mode=TwoWay}" Background="LightBlue" Style="{StaticResource CommonMouseEvents}" Orientation="Horizontal">
-                <Label FontSize="15" Content="Client outbound port:" />
-                <TextBox Text="{Binding ClientOutboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
-            </WrapPanel>
+            <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ServerInboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundUrlWrapper.CanvasTop, Mode=TwoWay}">
+                <WrapPanel  Orientation="Horizontal">
+                    <Label FontSize="15" Content="Server address:" />
+                    <TextBox Text="{Binding ServerInboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                </WrapPanel>
+            </Border>
+            <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ServerInboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundPortWrapper.CanvasTop, Mode=TwoWay}">
+                <WrapPanel Orientation="Horizontal">
+                    <Label FontSize="15" Content="Server port:" />
+                    <TextBox Text="{Binding ServerInboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                </WrapPanel>
+            </Border>
+            
+            <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ClientOutboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundUrlWrapper.CanvasTop, Mode=TwoWay}" >
+                <WrapPanel  Orientation="Horizontal">
+                    <Label FontSize="15" Content="Client outbound address:" />
+                    <TextBox Text="{Binding ClientOutboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                </WrapPanel>
+            </Border>
+            
+            <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ClientOutboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ClientOutboundPortWrapper.CanvasTop, Mode=TwoWay}" >
+                <WrapPanel Orientation="Horizontal">
+                    <Label FontSize="15" Content="Client outbound port:" />
+                    <TextBox Text="{Binding ClientOutboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
+                </WrapPanel>
+            </Border>
+            
+            <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding MessageBodyWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding MessageBodyWrapper.CanvasTop, Mode=TwoWay}" >
+                <DockPanel Width="300">
+                    <Label FontSize="15" Content="Message body (JSON)" DockPanel.Dock="Top" />
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" Height="200" HorizontalAlignment="Stretch" Text="{Binding MessageBodyWrapper.TextValue}" FontSize="15"/>
+                </DockPanel>
+            </Border>
 
-            <DockPanel Canvas.Left="{Binding MessageBodyWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding MessageBodyWrapper.CanvasTop, Mode=TwoWay}" Width="300" Background="LightBlue" Style="{StaticResource CommonMouseEvents}">
-                <Label FontSize="15" Content="Message body (JSON)" DockPanel.Dock="Top" />
-                <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" Height="200" HorizontalAlignment="Stretch" Text="{Binding MessageBodyWrapper.TextValue}" FontSize="15"/>
-            </DockPanel>
+            <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ReceivedRequestsWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ReceivedRequestsWrapper.CanvasTop, Mode=TwoWay}" >
+                <ListView VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>
+                            <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" Width="200"/>
+                            <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=Timestamp, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
+                            <GridViewColumn Header="Headers" DisplayMemberBinding="{Binding Headers}" Width="100"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
 
-            <ListView Canvas.Left="{Binding ReceivedRequestsWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ReceivedRequestsWrapper.CanvasTop, Mode=TwoWay}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CommonMouseEvents}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>
-                        <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" Width="200"/>
-                        <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=Timestamp, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
-                        <GridViewColumn Header="Headers" DisplayMemberBinding="{Binding Headers}" Width="100"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding LoggerWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding LoggerWrapper.CanvasTop, Mode=TwoWay}" >
+                <ListView VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding LogList}" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="50"/>
+                            <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=LoggedAt, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
+                            <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Msg}" Width="400"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
 
-            <ListView Canvas.Left="{Binding LoggerWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding LoggerWrapper.CanvasTop, Mode=TwoWay}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="500" ItemsSource="{Binding LogList}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CommonMouseEvents}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="50"/>
-                        <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=LoggedAt, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
-                        <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Msg}" Width="400"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-
-            <DataGrid Canvas.Left="{Binding HeadersCanvas.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding HeadersCanvas.CanvasTop, Mode=TwoWay}" ItemsSource="{Binding HeadersCanvas.HeaderList}" AutoGenerateColumns="False" CanUserAddRows="True" Style="{StaticResource CommonMouseEvents}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Header Key" Binding="{Binding HeaderKey, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="Header Value" Binding="{Binding HeaderValue, UpdateSourceTrigger=PropertyChanged}" />
-                </DataGrid.Columns>
-            </DataGrid>
+            <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding HeadersCanvas.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding HeadersCanvas.CanvasTop, Mode=TwoWay}" >
+                <DataGrid ItemsSource="{Binding HeadersCanvas.HeaderList}" AutoGenerateColumns="False" CanUserAddRows="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Header Key" Binding="{Binding HeaderKey, UpdateSourceTrigger=PropertyChanged}" />
+                        <DataGridTextColumn Header="Header Value" Binding="{Binding HeaderValue, UpdateSourceTrigger=PropertyChanged}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+            
         </Canvas>
     </Grid>
 </Window>
