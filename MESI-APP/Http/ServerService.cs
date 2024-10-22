@@ -1,4 +1,5 @@
-﻿using MESI_APP.Models;
+﻿using MESI_APP.Helpers;
+using MESI_APP.Models;
 using MESI_APP.Services;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +13,9 @@ namespace MESI_APP.Http
         private readonly LoggerService _logger;
         private HttpListener _httpListener;
         public event Action<ReceivedRequestDTO> RequestReceived;
+        private const string DefaultResponseMessageOK = "Hello, MESI-APP user!";
+        private const string DefaultResponseMessageBadRequest = "Invalid request content";
+        
         public ServerService(LoggerService loggerService) {
             InitListener();
             _logger = loggerService;
@@ -55,12 +59,17 @@ namespace MESI_APP.Http
             var response = context.Response;
             var request = context.Request;
             var headers = request.Headers;
+            bool isJson = true;
             try
             {
-                string content;
-                using (var stream = new StreamReader(request.InputStream))
+                string content = string.Empty;
+                if (request.HasEntityBody)
                 {
-                    content = await stream.ReadToEndAsync();
+                    using (var stream = new StreamReader(request.InputStream))
+                    {
+                        content = await stream.ReadToEndAsync();
+                    }
+                    isJson = await SerializationHelper.IsJsonFormat(content);
                 }
 
                 // Prepare and send received request to listeners (ViewModel)
@@ -68,9 +77,9 @@ namespace MESI_APP.Http
                 RequestReceived?.Invoke(new ReceivedRequestDTO(dt, content, string.Join('\n', headerValues), request.HttpMethod));
 
                 // Prepare response
-                string responseString = "Hello, MESI-APP user!";
+                string responseString = isJson ? DefaultResponseMessageOK : DefaultResponseMessageBadRequest;
                 response.ContentType = "text/plain";
-
+                response.StatusCode = isJson ? 200 : 400;
                 using (var writer = new StreamWriter(response.OutputStream))
                 {
                     await writer.WriteAsync(responseString);
@@ -86,7 +95,7 @@ namespace MESI_APP.Http
         }
 
         public bool ConfigServer(string url, int port) {
-            _logger.Error("Configuring server...");
+            _logger.Info("Configuring server...");
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) || port < 1 || port > 65535)
             {
                 _logger.Error("Server configuration failed, URL:Port is invalid");

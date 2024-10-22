@@ -36,5 +36,17 @@ namespace MESI_APP.Helpers
                 return returnValue;
             }
         }
+
+        public static async Task<bool> IsJsonFormat(string content) {
+            try
+            {
+                await DeserializeJsonString<JsonDocument>(content);
+                // parsing succeeded, its JSON
+                return true;
+            }
+            catch (Exception ex) {
+                return false;
+            }
+        }
     }
 }
