@@ -10,7 +10,6 @@ namespace MESI_APP.Services
 {
     public class FileManagementService
     {
-        private const string TAG = "FileManagementService";
         private readonly LoggerService _logger;
         public FileManagementService(LoggerService loggerService) {
             _logger = loggerService;

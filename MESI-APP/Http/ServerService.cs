@@ -3,6 +3,7 @@ using MESI_APP.Services;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace MESI_APP.Http
 {
@@ -11,7 +12,6 @@ namespace MESI_APP.Http
         private readonly LoggerService _logger;
         private HttpListener _httpListener;
         public event Action<ReceivedRequestDTO> RequestReceived;
-        private bool _isRunning;
         public ServerService(LoggerService loggerService) {
             InitListener();
             _logger = loggerService;
@@ -22,15 +22,14 @@ namespace MESI_APP.Http
             {
                 // Start HTTP server on set url:port
                 _logger.Info($"Starting HTTP server: {_httpListener.Prefixes.FirstOrDefault()}");
-                if (_isRunning)
+                if (_httpListener.IsListening)
                 {
                     _logger.Info("Server is already running.");
                     return;
                 }
-                _isRunning = true;
                 _httpListener.Start();
 
-                while (_isRunning)
+                while (_httpListener.IsListening)
                 {
                     var context = await _httpListener.GetContextAsync();
                     await HandleRequest(context);
@@ -52,19 +51,19 @@ namespace MESI_APP.Http
 
         private async Task HandleRequest(HttpListenerContext context)
         {
+            DateTime dt = DateTime.Now;
+            var response = context.Response;
+            var request = context.Request;
+            var headers = request.Headers;
             try
             {
-                DateTime dt = DateTime.Now;
-                var response = context.Response;
-                var request = context.Request;
-                var headers = request.Headers;
-
-                string content = "";
+                string content;
                 using (var stream = new StreamReader(request.InputStream))
                 {
                     content = await stream.ReadToEndAsync();
                 }
-                // Send received request to listeners (ViewModel)
+
+                // Prepare and send received request to listeners (ViewModel)
                 var headerValues = request.Headers.AllKeys.Select(x => $"{x} | {request.Headers[x]}");
                 RequestReceived?.Invoke(new ReceivedRequestDTO(dt, content, string.Join('\n', headerValues), request.HttpMethod));
 
@@ -76,43 +75,48 @@ namespace MESI_APP.Http
                 {
                     await writer.WriteAsync(responseString);
                 }
-                response.Close();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.Error($"Error handling request: {ex.Message}");
+            }
+            finally {
+                response.Close();
             }
         }
 
         public bool ConfigServer(string url, int port) {
+            _logger.Error("Configuring server...");
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) || port < 1 || port > 65535)
             {
                 _logger.Error("Server configuration failed, URL:Port is invalid");
                 return false;
             }
-            Uri uri = new Uri($"{url}:{port}");
+            // Remove ending slashes from url
+            url = Regex.Replace(url, "/+$", "");
+
             _httpListener.Prefixes.Clear();
-            _httpListener.Prefixes.Add(uri.ToString());
+            _httpListener.Prefixes.Add($"{url}:{port}/");
             return true;
         }
 
         public void Stop()
         {
-            if (!_isRunning) {
+            if (!_httpListener.IsListening) {
                 _logger.Info("Server is not running.");
+                return;
             }
-            _isRunning = false;
-            if (_httpListener.IsListening)
+            else
             {
                 _httpListener.Stop();
             }
             _httpListener.Close();
+            _logger.Info("Server was stopped.");
             // Reinitialize httpListener becasue the current one is disposed
-            InitListener();
-        
+            InitListener();        
         }
 
         private void InitListener() {
-            _isRunning = false;
             _httpListener = new HttpListener();
         }
     }

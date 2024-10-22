@@ -95,6 +95,10 @@ namespace MESI_APP.ViewModels
 
         [RelayCommand]
         private async Task SendRequest() {
+            if (!ValidateClientConfig())
+            {
+                return;
+            }
             var headers = HeadersCanvas.HeaderList.Where(h => !string.IsNullOrEmpty(h.HeaderKey) && !string.IsNullOrEmpty(h.HeaderValue));
             await _clientService.SendPostRequest($"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/", headers, MessageBodyWrapper.TextValue);
         }
@@ -117,7 +121,9 @@ namespace MESI_APP.ViewModels
         [RelayCommand]
         private async Task StartServer()
         {
-            if (!ServerInboundPortWrapper.Port.HasValue) return;
+            if (!ValidateServerConfig()) {
+                return;
+            }
             if (_httpServer.ConfigServer(ServerInboundUrlWrapper.TextValue, ServerInboundPortWrapper.Port.Value))
             {
                 await _httpServer.Start();
@@ -156,5 +162,23 @@ namespace MESI_APP.ViewModels
             }
         }
 
+        private bool ValidateServerConfig() => ValidateConfig(ServerInboundPortWrapper, ServerInboundUrlWrapper, "Server");
+        private bool ValidateClientConfig() => ValidateConfig(ClientOutboundPortWrapper, ClientOutboundUrlWrapper, "Client");
+        private bool ValidateConfig(PortCanvas portWrapper, Stringcanvas urlWrapper, string entityName)
+        {
+            if (portWrapper == null || !portWrapper.Port.HasValue)
+            {
+                _loggerService.Error($"{entityName} port is invalid");
+                return false;
+            }
+
+            if (urlWrapper == null || string.IsNullOrEmpty(urlWrapper.TextValue) || !Uri.IsWellFormedUriString(urlWrapper.TextValue, UriKind.Absolute))
+            {
+                _loggerService.Error($"{entityName} url is invalid");
+                return false;
+            }
+
+            return true;
+        }
     }
 }

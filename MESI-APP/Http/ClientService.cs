@@ -22,11 +22,19 @@ namespace MESI_APP.Http
         }
 
         private void InitClient() {
-            _httpClient = new HttpClient();
+            // Ignore ServerCertificate - Only for testing purposes, if server is running with invalid certificate
+            _httpClient = new HttpClient(PrepareHandler());
             _httpClient.Timeout = TimeSpan.FromSeconds(5);
         }
 
-
+        private HttpClientHandler PrepareHandler() {
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+            return httpClientHandler;
+        }
 
         public async Task<HttpResponseMessage> SendPostRequest(string url, IEnumerable<HeaderDTO> headers, string jsonString) {
             _logger.Info($"POST {url} was sent.");
@@ -49,7 +57,6 @@ namespace MESI_APP.Http
                     using (var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json"))
                     {
                         newRequest.Content = httpContent;
-
                         var resp = await _httpClient.SendAsync(newRequest);
                         if (resp != null)
                         {
