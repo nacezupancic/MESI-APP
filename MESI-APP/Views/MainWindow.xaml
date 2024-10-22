@@ -54,13 +54,13 @@
         <Canvas Name="MesiCanvas" Grid.Column="1" Background="White" Margin="10">
             <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ServerInboundUrlWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundUrlWrapper.CanvasTop, Mode=TwoWay}">
                 <WrapPanel  Orientation="Horizontal">
-                    <Label FontSize="15" Content="Server address:" />
+                    <Label FontSize="15" Content="Server inbound address:" />
                     <TextBox Text="{Binding ServerInboundUrlWrapper.TextValue}" Width="150" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
                 </WrapPanel>
             </Border>
             <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ServerInboundPortWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ServerInboundPortWrapper.CanvasTop, Mode=TwoWay}">
                 <WrapPanel Orientation="Horizontal">
-                    <Label FontSize="15" Content="Server port:" />
+                    <Label FontSize="15" Content="Server inbound port:" />
                     <TextBox Text="{Binding ServerInboundPortWrapper.Port}" Width="50" FontSize="15" VerticalAlignment="Center" Margin="0,0,5,0" />
                 </WrapPanel>
             </Border>
@@ -87,37 +87,46 @@
             </Border>
 
             <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding ReceivedRequestsWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding ReceivedRequestsWrapper.CanvasTop, Mode=TwoWay}" >
-                <ListView SelectionMode="Single" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="250" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" >
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>
-                            <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" Width="200"/>
-                            <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=Timestamp, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
-                            <GridViewColumn Header="Headers" DisplayMemberBinding="{Binding Headers}" Width="100"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <WrapPanel Orientation="Vertical">
+                    <Label FontSize="15" Content="Incoming requests" />
+                    <ListView SelectionMode="Single" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="250" ItemsSource="{Binding ReceivedRequests}" HorizontalAlignment="Left" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="50"/>
+                                <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" Width="200"/>
+                                <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=Timestamp, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
+                                <GridViewColumn Header="Headers" DisplayMemberBinding="{Binding Headers}" Width="100"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </WrapPanel>
             </Border>
 
             <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding LoggerWrapper.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding LoggerWrapper.CanvasTop, Mode=TwoWay}" >
-                <ListView SelectionMode="Single" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="150" ItemsSource="{Binding LogList}" HorizontalAlignment="Left" VerticalAlignment="Center" >
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="50"/>
-                            <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=LoggedAt, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
-                            <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Msg}" Width="400"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <WrapPanel Orientation="Vertical">
+                    <Label FontSize="15" Content="Logs" />
+                    <ListView SelectionMode="Single" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="150" ItemsSource="{Binding LogList}" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="50"/>
+                                <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Path=LoggedAt, StringFormat=dd. MM. yyyy hh:mm:ss}" Width="150"/>
+                                <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Msg}" Width="400"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </WrapPanel>
             </Border>
 
             <Border Style="{StaticResource CommonMouseEvents}" Canvas.Left="{Binding HeadersCanvas.CanvasLeft, Mode=TwoWay}" Canvas.Top="{Binding HeadersCanvas.CanvasTop, Mode=TwoWay}" >
-                <DataGrid ItemsSource="{Binding HeadersCanvas.HeaderList}" AutoGenerateColumns="False" CanUserAddRows="True">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Header Key" Binding="{Binding HeaderKey, UpdateSourceTrigger=PropertyChanged}" />
-                        <DataGridTextColumn Header="Header Value" Binding="{Binding HeaderValue, UpdateSourceTrigger=PropertyChanged}" />
-                    </DataGrid.Columns>
-                </DataGrid>
+                <WrapPanel Orientation="Vertical">
+                    <Label FontSize="15" Content="HTTP Headers" />
+                    <DataGrid ItemsSource="{Binding HeadersCanvas.HeaderList}" AutoGenerateColumns="False" CanUserAddRows="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Header Key" Binding="{Binding HeaderKey, UpdateSourceTrigger=PropertyChanged}" />
+                            <DataGridTextColumn Header="Header Value" Binding="{Binding HeaderValue, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </WrapPanel>
             </Border>
             
         </Canvas>
