@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace MESI_APP.Services
 {
-    public class FileManagementService
+    public class FileManagementService : IFileManagementService
     {
-        private readonly LoggerService _logger;
-        public FileManagementService(LoggerService loggerService) {
+        private readonly ILoggerService _logger;
+        public FileManagementService(ILoggerService loggerService) {
             _logger = loggerService;
         }
 

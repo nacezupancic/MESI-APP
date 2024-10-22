@@ -8,15 +8,15 @@ using System.Text.RegularExpressions;
 
 namespace MESI_APP.Http
 {
-    public class ServerService 
+    public class ServerService : IServerService
     {
-        private readonly LoggerService _logger;
+        private readonly ILoggerService _logger;
         private HttpListener _httpListener;
         public event Action<ReceivedRequestDTO> RequestReceived;
         private const string DefaultResponseMessageOK = "Hello, MESI-APP user!";
         private const string DefaultResponseMessageBadRequest = "Invalid request content";
         
-        public ServerService(LoggerService loggerService) {
+        public ServerService(ILoggerService loggerService) {
             InitListener();
             _logger = loggerService;
         }

@@ -14,10 +14,10 @@ namespace MESI_APP.ViewModels
 {
     public partial class MainViewModel : ViewModelBase
     {
-        private readonly ServerService _httpServer;
-        private readonly ClientService _clientService;
-        private readonly SettingsService _settingsService;
-        private readonly LoggerService _loggerService;
+        private readonly IServerService _httpServer;
+        private readonly IClientService _clientService;
+        private readonly ISettingsService _settingsService;
+        private readonly ILoggerService _loggerService;
         private List<PropertyInfo> _canvasPropertyInfo;
 
         #region Binding properties
@@ -55,7 +55,7 @@ namespace MESI_APP.ViewModels
         [ObservableProperty]
         private RequestHeaderCanvas _headersCanvas;
         #endregion        
-        public MainViewModel(ServerService server, ClientService clientService, SettingsService settingsService, LoggerService loggerService)
+        public MainViewModel(IServerService server, IClientService clientService, ISettingsService settingsService, ILoggerService loggerService)
         {
             InitBindings();
 
@@ -81,14 +81,17 @@ namespace MESI_APP.ViewModels
             }
         }
         public async Task LoadConfiguration(bool init = false) {
-            var jsonDict = await _settingsService.GetSettings(init);           
-            foreach (var property in _canvasPropertyInfo)
+            var jsonDict = await _settingsService.GetSettings(init);
+            if (jsonDict != null)
             {
-                if (jsonDict.ContainsKey(property.Name) && typeof(CanvasPosition).IsAssignableFrom(property.PropertyType))
+                foreach (var property in _canvasPropertyInfo)
                 {
-                    var jsonValue = jsonDict[property.Name];
-                    var value = JsonSerializer.Deserialize(jsonValue.GetRawText(), property.PropertyType);
-                    property.SetValue(this, value);
+                    if (jsonDict.ContainsKey(property.Name) && typeof(CanvasPosition).IsAssignableFrom(property.PropertyType))
+                    {
+                        var jsonValue = jsonDict[property.Name];
+                        var value = JsonSerializer.Deserialize(jsonValue.GetRawText(), property.PropertyType);
+                        property.SetValue(this, value);
+                    }
                 }
             }
         }
@@ -105,18 +108,31 @@ namespace MESI_APP.ViewModels
 
         [RelayCommand]
         private async Task SaveSettings() {
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            foreach (var property in _canvasPropertyInfo)
+            try
             {
-                dict[property.Name] = property.GetValue(this);
+                Dictionary<string, object> dict = new Dictionary<string, object>();
+                foreach (var property in _canvasPropertyInfo)
+                {
+                    dict[property.Name] = property.GetValue(this);
+                }
+                await _settingsService.SaveSettings(dict);
             }
-            await _settingsService.SaveSettings(dict);            
+            catch (Exception ex) {
+                _loggerService.Error($"Save settings failed. {ex.Message}");
+            }
         }
         [RelayCommand]
         private async Task ResetSettings()
         {
-            await LoadConfiguration(true);
-            await SaveSettings();
+            try
+            {
+                await LoadConfiguration(true);
+                await SaveSettings();
+            }
+            catch (Exception ex)
+            {
+                _loggerService.Error($"Reset settings failed. {ex.Message}");
+            }
         }
         [RelayCommand]
         private async Task StartServer()

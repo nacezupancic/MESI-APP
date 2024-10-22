@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace MESI_APP.Http
 {
-    public class ClientService
+    public class ClientService : IClientService
     {
         private HttpClient _httpClient;
-        private readonly LoggerService _logger;
+        private readonly ILoggerService _logger;
 
-        public ClientService(LoggerService loggerService) {
+        public ClientService(ILoggerService loggerService) {
             InitClient();
             _logger = loggerService;
         }

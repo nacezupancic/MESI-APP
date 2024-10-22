@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MESI_APP.Services
 {
-    public class LoggerService
+    public class LoggerService : ILoggerService
     {
         public event Action<LoggerMsg> OnLog;
 

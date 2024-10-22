@@ -38,11 +38,11 @@ namespace MESI_APP
         {
             services.AddSingleton<MainWindow>();
             services.AddSingleton<MainViewModel>();
-            services.AddSingleton<ServerService>();
-            services.AddSingleton<ClientService>();
-            services.AddSingleton<SettingsService>();
-            services.AddSingleton<FileManagementService>();
-            services.AddSingleton<LoggerService>();
+            services.AddSingleton<IServerService, ServerService>();
+            services.AddSingleton<IClientService, ClientService>();
+            services.AddSingleton<ISettingsService, SettingsService>();
+            services.AddSingleton<IFileManagementService, FileManagementService>();
+            services.AddSingleton<ILoggerService, LoggerService>();
         }
     }
 
