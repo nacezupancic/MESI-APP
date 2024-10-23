@@ -37,22 +37,24 @@ namespace MESI_APP.Http
         }
 
         public async Task<HttpResponseMessage> SendPostRequest(string url, IEnumerable<HeaderDTO> headers, string jsonString) {
-            _logger.Info($"POST {url} was sent.");
+            _logger.Info($"Attempting to send: POST {url}");
             try
             {
                 if (string.IsNullOrWhiteSpace(url))
                     throw new ArgumentException("URL cannot be null or empty");                           
 
+               
                 using (var newRequest = new HttpRequestMessage(HttpMethod.Post, url)) {
                     // Add headers
                     if (headers != null)
                     {
+                        newRequest.Headers.Clear(); // clear default headers
                         foreach (var h in headers)
                         {
-                            newRequest.Headers.Clear(); // clear default headers
                             newRequest.Headers.Add(h.HeaderKey, h.HeaderValue);
                         }
                     }
+
 
                     using (var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json"))
                     {

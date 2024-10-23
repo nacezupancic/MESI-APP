@@ -38,7 +38,6 @@ namespace MESI_APP.Services
         }
 
         public async Task<bool> SaveToFile(string content, string filePath) {
-            _logger.Info($"Saving content to file {filePath}");
 
             try
             {

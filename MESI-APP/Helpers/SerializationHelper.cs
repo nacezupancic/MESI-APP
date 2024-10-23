@@ -15,7 +15,7 @@ namespace MESI_APP.Helpers
             WriteIndented = true
         };
         public static async Task<string> PrepareJsonString(object serializationObject)
-        {           
+        {      
             string jsonString;
             using (var ms = new MemoryStream())
             {

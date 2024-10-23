@@ -9,7 +9,7 @@ Create a .NET application that functions as both an HTTP server and client. This
 
 Before getting started, ensure the following tools and frameworks are installed:
 
-1.  **.NET SDK**
+1.  **.NET 8 SDK**
      - Download and install the .NET SDK from the [official .NET website](https://dotnet.microsoft.com/download).
      - Make sure the installed SDK version aligns with the target framework of your project (.NET 8).
    To verify the installation, run the following command in your terminal:
@@ -52,6 +52,8 @@ When the repository is cloned to your machine, navigate to the `MESI-APP` folder
 - Configure HTTP request body and headers,
 - Control buttons (Start/Stop server, Send request, Save settings, Reset settings)
 
+
+![Main page](https://img001.prntscr.com/file/img001/WwR1-J-KQymFqWwfcmYrrA.png)
 
 ## How it works
 

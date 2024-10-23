@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace MESI_APP.Http
 {
@@ -15,7 +16,7 @@ namespace MESI_APP.Http
         public event Action<ReceivedRequestDTO> RequestReceived;
         private const string DefaultResponseMessageOK = "Hello, MESI-APP user!";
         private const string DefaultResponseMessageBadRequest = "Invalid request content";
-        
+
         public ServerService(ILoggerService loggerService) {
             InitListener();
             _logger = loggerService;
@@ -40,9 +41,9 @@ namespace MESI_APP.Http
                 }
 
             }
-            catch (HttpListenerException ex)
+            catch (HttpListenerException ex) when (ex.ErrorCode == 995) //ERROR_OPERATION_ABORTED
             {
-                _logger.Error($"Http server was stopped: {ex.Message}");
+                _logger.Info($"Http server was stopped");
                 InitListener();
             }
             catch (Exception ex)
@@ -111,6 +112,7 @@ namespace MESI_APP.Http
 
         public void Stop()
         {
+            _logger.Info("Attempting to stop server!");
             if (!_httpListener.IsListening) {
                 _logger.Info("Server is not running.");
                 return;
@@ -119,8 +121,8 @@ namespace MESI_APP.Http
             {
                 _httpListener.Stop();
             }
+
             _httpListener.Close();
-            _logger.Info("Server was stopped.");
             // Reinitialize httpListener becasue the current one is disposed
             InitListener();        
         }

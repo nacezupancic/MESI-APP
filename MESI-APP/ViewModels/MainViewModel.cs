@@ -6,7 +6,9 @@ using MESI_APP.Models.SaveableCanvasModels;
 using MESI_APP.Services;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 
@@ -60,6 +62,7 @@ namespace MESI_APP.ViewModels
         {
             InitBindings();
 
+            // Init services
             _loggerService = loggerService;
             _httpServer = server;
             _clientService = clientService;
@@ -82,18 +85,25 @@ namespace MESI_APP.ViewModels
             }
         }
         public async Task LoadConfiguration(bool init = false) {
-            var jsonDict = await _settingsService.GetSettings(init);
-            if (jsonDict != null)
+            try
             {
-                foreach (var property in _canvasPropertyInfo)
+                var jsonDict = await _settingsService.GetSettings(init);
+                if (jsonDict != null)
                 {
-                    if (jsonDict.ContainsKey(property.Name) && typeof(SaveableObject).IsAssignableFrom(property.PropertyType))
+                    foreach (var property in _canvasPropertyInfo)
                     {
-                        var jsonValue = jsonDict[property.Name];
-                        var value = JsonSerializer.Deserialize(jsonValue.GetRawText(), property.PropertyType);
-                        property.SetValue(this, value);
+                        // All of saved settings are of type "SaveableObject", so just pair them all
+                        if (jsonDict.ContainsKey(property.Name) && typeof(SaveableObject).IsAssignableFrom(property.PropertyType))
+                        {
+                            var jsonValue = jsonDict[property.Name];
+                            var value = JsonSerializer.Deserialize(jsonValue.GetRawText(), property.PropertyType);
+                            property.SetValue(this, value);
+                        }
                     }
                 }
+            }
+            catch (Exception e) {
+                _loggerService.Error($"Loading configuration failed {e.Message}");
             }
         }
 
@@ -104,13 +114,15 @@ namespace MESI_APP.ViewModels
                 return;
             }
             var headers = HeadersCanvas.HeaderList.Where(h => !string.IsNullOrEmpty(h.HeaderKey) && !string.IsNullOrEmpty(h.HeaderValue));
-            await _clientService.SendPostRequest($"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/", headers, MessageBodyWrapper.TextValue);
+            string url = $"{ClientOutboundUrlWrapper.TextValue}:{ClientOutboundPortWrapper.Port}/";
+            await _clientService.SendPostRequest(url, headers, MessageBodyWrapper.TextValue); 
         }
 
         [RelayCommand]
         private async Task SaveSettings() {
             try
             {
+                _loggerService.Info("Saving settings...");
                 Dictionary<string, object> dict = new Dictionary<string, object>();
                 foreach (var property in _canvasPropertyInfo)
                 {
@@ -141,9 +153,15 @@ namespace MESI_APP.ViewModels
             if (!ValidateServerConfig()) {
                 return;
             }
-            if (_httpServer.ConfigServer(ServerInboundUrlWrapper.TextValue, ServerInboundPortWrapper.Port.Value))
+            try
             {
-                await _httpServer.Start();
+                if (_httpServer.ConfigServer(ServerInboundUrlWrapper.TextValue, ServerInboundPortWrapper.Port.Value))
+                {
+                    await _httpServer.Start();
+                }
+            }
+            catch (Exception e) {
+                _loggerService.Error($"Error starting the server: {e.Message}");
             }
         }
         [RelayCommand]
@@ -194,7 +212,8 @@ namespace MESI_APP.ViewModels
                 _loggerService.Error($"{entityName} url is invalid");
                 return false;
             }
-
+            //Remove ending slashes
+            urlWrapper.TextValue = Regex.Replace(urlWrapper.TextValue, "/+$", "");
             return true;
         }
     }

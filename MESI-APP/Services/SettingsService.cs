@@ -44,7 +44,8 @@ namespace MESI_APP.Services
 
         public async Task SaveSettings(Dictionary<string, object> settings) {
             string jsonString = await SerializationHelper.PrepareJsonString(settings);
-            await _fileManagementService.SaveToFile(jsonString, Constants.LatestConfig);
-        }                
+            var saved = await _fileManagementService.SaveToFile(jsonString, Constants.LatestConfig);
+            _logger.Info(saved ? "Settings were saved" : "Settings were not saved");
+        }
     }
 }
