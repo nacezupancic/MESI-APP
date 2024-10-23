@@ -21,17 +21,30 @@
         <!-- Styling of control buttons -->
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="15"/>
-            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Background" Value="#007ACC"></Setter>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Width" Value="150"/>
             <Setter Property="Height" Value="45"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="5" Background="{TemplateBinding Background}" BorderThickness="1" Padding="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#003A70"/>
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Background" Value="#002e4d" />
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background" Value="#002e4d"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#005A9E"/>
+                    <Setter Property="Background" Value="#002e4d"/>
                 </Trigger>
             </Style.Triggers>
         </Style>

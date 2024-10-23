@@ -73,10 +73,10 @@ namespace MESI_APP.ViewModels
             _canvasPropertyInfo = new List<PropertyInfo>();
             LogList = new ObservableCollection<LoggerMsg>();
             ReceivedRequests = new ObservableCollection<ReceivedRequestDTO>();
-            foreach (var property in this.GetType().GetProperties().Where(x => typeof(CanvasPosition).IsAssignableFrom(x.PropertyType) && x.CanWrite))
+            foreach (var property in this.GetType().GetProperties().Where(x => typeof(SaveableObject).IsAssignableFrom(x.PropertyType) && x.CanWrite))
             {
                 var instance = Activator.CreateInstance(property.PropertyType);
-                ((CanvasPosition)instance).BindableName = property.Name;
+                ((SaveableObject)instance).BindableName = property.Name;
                 property.SetValue(this, instance);
                 _canvasPropertyInfo.Add(property);
             }
@@ -87,7 +87,7 @@ namespace MESI_APP.ViewModels
             {
                 foreach (var property in _canvasPropertyInfo)
                 {
-                    if (jsonDict.ContainsKey(property.Name) && typeof(CanvasPosition).IsAssignableFrom(property.PropertyType))
+                    if (jsonDict.ContainsKey(property.Name) && typeof(SaveableObject).IsAssignableFrom(property.PropertyType))
                     {
                         var jsonValue = jsonDict[property.Name];
                         var value = JsonSerializer.Deserialize(jsonValue.GetRawText(), property.PropertyType);

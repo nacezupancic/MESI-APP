@@ -28,8 +28,8 @@ When the repository is cloned to your machine, navigate to the `MESI-APP` folder
 
 ###  Building/Running with Visual Studio
 - Open the solution with Visual Studio (`MESI-APP.sln`)
-- In toolbar, click **Build** -> **Buil solution (CTRL+SHIFT+B)**
-- When the build succeedds, clic **Debug** -> **Start Debugging (F5)**
+- In toolbar, click **Build** -> **Build solution (CTRL+SHIFT+B)**
+- When the build succeedds, click **Debug** -> **Start Debugging (F5)**
 
 
 ### Building/Running with CMD/PowerShell
@@ -55,7 +55,7 @@ When the repository is cloned to your machine, navigate to the `MESI-APP` folder
 
 ## How it works
 
-This application works as Windows desktop application (WPF platform). It only has one view, which is separated on two parts - _Control_ part and _Canvas_.
+This application works as Windows desktop application (WPF platform). It only has one view, which is separated to two parts - _Control_ part and _Canvas_.
 
 ### Control part
 
@@ -86,5 +86,5 @@ A simple white Canvas, which contains 8 elements which are used to control the s
 `curl -X POST http://localhost:65432 -d "Hello, world!"`
 - For testing purposes, the Client has disabled SSL verification in case you don't have a valid certificate but would still like to test https. You can generate a development certiifcate in command line:
 `netsh http add sslcert ipport=0.0.0.0:<port> certhash=ffffffffffffffffffffffffffffffffffffffff appid={00112233-4455-6677-8899-AABBCCDDEEFF}`
-
+- The default settings are saved in `InitialConfig.json` - its the best if you don't change/delete it.
 

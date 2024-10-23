@@ -2,8 +2,6 @@
   "WindowSize": {
     "Width": 1200,
     "Height": 700,
-    "CanvasLeft": null,
-    "CanvasTop": null,
     "BindableName": "WindowSize"
   },
   "ServerInboundUrlWrapper": {
@@ -38,14 +36,14 @@
   },
   "ReceivedRequestsWrapper": {
     "TextValue": null,
-    "CanvasLeft": 358.2,
-    "CanvasTop": 200.59999999999997,
+    "CanvasLeft": 421.4,
+    "CanvasTop": 166.99999999999994,
     "BindableName": "ReceivedRequestsWrapper"
   },
   "LoggerWrapper": {
     "TextValue": null,
-    "CanvasLeft": 356.80000000000007,
-    "CanvasTop": 419.7999999999999,
+    "CanvasLeft": 357.6,
+    "CanvasTop": 409.39999999999986,
     "BindableName": "LoggerWrapper"
   },
   "HeadersCanvas": {
@@ -55,8 +53,8 @@
         "HeaderValue": "Value1"
       }
     ],
-    "CanvasLeft": 17.599999999999852,
-    "CanvasTop": 405,
+    "CanvasLeft": 15.199999999999875,
+    "CanvasTop": 420.2,
     "BindableName": "HeadersCanvas"
   }
 }

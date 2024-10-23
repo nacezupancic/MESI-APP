@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MESI_APP.Models.SaveableCanvasModels
 {
-    public class WindowSize : CanvasPosition
+    public class WindowSize : SaveableObject
     {
         public int Width { get; set; } = Constants.WindowDefaultWidth;
         public int Height { get; set; } = Constants.WindowDefaultHeight;
