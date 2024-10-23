@@ -36,10 +36,10 @@ namespace MESI_APP.ViewModels
         private PortCanvas _clientOutboundPortWrapper;
 
         [ObservableProperty]
-        private Stringcanvas _messageBodyWrapper;      
-        
+        private Stringcanvas _messageBodyWrapper;
+
         [ObservableProperty]
-        private bool _autoSave;
+        private bool _autoSave = true; // By default, always autosave settings/positions
         
         [ObservableProperty]
         private Stringcanvas _receivedRequestsWrapper;
@@ -55,6 +55,7 @@ namespace MESI_APP.ViewModels
         [ObservableProperty]
         private RequestHeaderCanvas _headersCanvas;
         #endregion        
+
         public MainViewModel(IServerService server, IClientService clientService, ISettingsService settingsService, ILoggerService loggerService)
         {
             InitBindings();
